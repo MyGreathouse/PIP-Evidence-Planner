@@ -241,6 +241,116 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sy
 .doc-icon{width:34px;height:34px;background:var(--navy-l);border-radius:var(--radius-sm);
   display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .doc-icon svg{width:17px;height:17px;color:var(--navy)}
+
+/* ─── VAULT UPLOAD / CAMERA ────────────────────────────────────── */
+.vault-add-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
+.vault-add-btn{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;padding:16px 10px;border-radius:var(--radius);
+  border:1.5px dashed var(--border2);background:var(--canvas);
+  cursor:pointer;transition:all .15s;text-align:center;
+  font-size:12px;font-weight:600;color:var(--text2);
+}
+.vault-add-btn:hover{border-color:var(--teal);background:var(--teal-l);color:var(--teal)}
+.vault-add-btn svg{width:22px;height:22px;opacity:.7}
+.vault-add-btn:hover svg{opacity:1}
+.vault-add-btn input[type=file]{display:none}
+
+/* upload progress bar */
+.upload-progress{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:8px;display:none}
+.upload-progress-fill{height:4px;background:var(--teal);border-radius:2px;width:0%;transition:width .3s}
+
+/* document card in vault */
+.doc-card{
+  border:1px solid var(--border);border-radius:var(--radius);
+  overflow:hidden;background:var(--white);
+  transition:box-shadow .12s;
+}
+.doc-card:hover{box-shadow:var(--shadow-md)}
+.doc-card-thumb{
+  width:100%;height:120px;object-fit:cover;
+  display:block;background:var(--navy-l);
+  border-bottom:1px solid var(--border);
+}
+.doc-card-thumb-placeholder{
+  width:100%;height:120px;background:var(--navy-l);
+  display:flex;align-items:center;justify-content:center;
+  border-bottom:1px solid var(--border);
+}
+.doc-card-thumb-placeholder svg{width:36px;height:36px;color:var(--navy);opacity:.4}
+.doc-card-thumb-placeholder.pdf-thumb{background:var(--red-l)}
+.doc-card-thumb-placeholder.pdf-thumb svg{color:var(--red);opacity:.5}
+.doc-card-thumb-placeholder.img-thumb{background:var(--teal-l)}
+.doc-card-thumb-placeholder.img-thumb svg{color:var(--teal);opacity:.5}
+.doc-card-body{padding:10px 11px}
+.doc-card-name{font-size:12px;font-weight:700;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
+.doc-card-meta{font-size:10.5px;color:var(--text3);display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.doc-card-actions{display:flex;gap:6px;padding:0 11px 11px}
+.doc-card-actions .btn{flex:1;font-size:11px;padding:5px 8px;justify-content:center}
+.doc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+
+/* camera modal */
+.camera-modal{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);
+  z-index:2000;flex-direction:column;align-items:center;justify-content:center;
+}
+.camera-modal.open{display:flex}
+.camera-video{
+  width:100%;max-width:520px;border-radius:var(--radius);
+  background:#000;display:block;
+}
+.camera-controls{
+  display:flex;gap:14px;margin-top:18px;align-items:center;
+}
+.camera-shutter{
+  width:64px;height:64px;border-radius:50%;
+  background:#fff;border:4px solid rgba(255,255,255,.5);
+  cursor:pointer;transition:transform .1s;display:flex;align-items:center;justify-content:center;
+}
+.camera-shutter:active{transform:scale(.92)}
+.camera-shutter svg{width:28px;height:28px;color:var(--navy)}
+.camera-cancel{
+  padding:10px 18px;border-radius:var(--radius-sm);
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);
+  color:#fff;font-size:13px;font-weight:600;cursor:pointer;
+}
+.camera-switch{
+  width:44px;height:44px;border-radius:50%;
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);
+  color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;
+}
+.camera-switch svg{width:20px;height:20px}
+.camera-preview{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);
+  z-index:2100;flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;
+}
+.camera-preview.open{display:flex}
+.camera-preview img{max-width:520px;width:90%;border-radius:var(--radius);max-height:65vh;object-fit:contain}
+.camera-preview-actions{display:flex;gap:12px}
+.canvas-hidden{display:none}
+
+/* lightbox for viewing stored docs */
+.lightbox{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);
+  z-index:3000;flex-direction:column;align-items:center;justify-content:center;
+  padding:20px;
+}
+.lightbox.open{display:flex}
+.lightbox img{max-width:100%;max-height:80vh;border-radius:var(--radius);object-fit:contain}
+.lightbox-close{
+  position:absolute;top:16px;right:16px;
+  background:rgba(255,255,255,.15);border:none;color:#fff;
+  width:38px;height:38px;border-radius:50%;font-size:20px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+}
+.lightbox-label{color:rgba(255,255,255,.7);font-size:13px;margin-top:12px;text-align:center}
+
+@media(max-width:600px){
+  .vault-add-row{grid-template-columns:1fr 1fr}
+  .doc-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+}
 </style>
 </head>
 <body>
@@ -458,6 +568,44 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sy
       <button class="btn btn-navy" onclick="saveMedication()">Save medication</button>
     </div>
   </div>
+</div>
+
+<!-- ═══ CAMERA MODAL ════════════════════════════════════════════════════════ -->
+<div class="camera-modal" id="camera-modal">
+  <video class="camera-video" id="camera-video" autoplay playsinline muted></video>
+  <canvas class="canvas-hidden" id="camera-canvas"></canvas>
+  <div class="camera-controls">
+    <button class="camera-cancel" onclick="closeCamera()">Cancel</button>
+    <button class="camera-shutter" onclick="capturePhoto()" title="Take photo">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4"/><path d="M20 7h-3.2L15 4H9L7.2 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+      </svg>
+    </button>
+    <button class="camera-switch" onclick="switchCamera()" title="Switch camera">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M20 7h-3.2L15 4H9L7.2 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+        <path d="m15 13-3 3-3-3"/><line x1="12" y1="16" x2="12" y2="10"/>
+      </svg>
+    </button>
+  </div>
+  <p style="color:rgba(255,255,255,.5);font-size:12px;margin-top:10px">Point camera at document, then tap the shutter</p>
+</div>
+
+<!-- ═══ PHOTO PREVIEW (confirm before saving) ════════════════════════════════ -->
+<div class="camera-preview" id="camera-preview">
+  <p style="color:rgba(255,255,255,.7);font-size:13px;font-weight:600">Use this photo?</p>
+  <img id="preview-img" src="" alt="Preview">
+  <div class="camera-preview-actions">
+    <button class="camera-cancel" onclick="retakePhoto()">Retake</button>
+    <button style="padding:10px 22px;border-radius:var(--radius-sm);background:var(--teal);border:none;color:#fff;font-size:13px;font-weight:700;cursor:pointer" onclick="confirmPhoto()">Save photo</button>
+  </div>
+</div>
+
+<!-- ═══ LIGHTBOX ═══════════════════════════════════════════════════════════ -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="">
+  <div class="lightbox-label" id="lightbox-label"></div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -873,50 +1021,260 @@ function saveAppointment(){
 function deleteAppt(i){D.appointments.splice(i,1);save();appointments();toast('Removed')}
 
 // ─── VAULT ────────────────────────────────────────────────────────────────
-const VAULT_CATS=['GP letter','Consultant report','Hospital record','OT report','Physiotherapy report','Care plan','Prescription','Mental health assessment','Witness statement','Other'];
+// ─── VAULT ────────────────────────────────────────────────────────────────
+const VAULT_CATS=['GP letter','Consultant report','Hospital record','OT report',
+  'Physiotherapy report','Care plan','Prescription','Mental health assessment',
+  'Witness statement','Photo of document','Other'];
+
+// ── Camera state ──────────────────────────────────────────────────────────
+let _camStream=null, _camFacing='environment', _pendingPhoto=null, _pendingMeta=null;
+
 function vault(){
   const ca=document.getElementById('content-area');
-  const rows=D.vault.map((v,i)=>`
-    <div class="item-row">
-      <div style="display:flex;gap:10px;align-items:center">
-        <div class="doc-icon"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
-        <div style="flex:1"><div class="item-title">${v.name}</div><div class="item-meta">${badge(v.cat,'badge-navy')}</div></div>
-        <button class="btn btn-sm btn-danger" onclick="deleteVault(${i})">×</button>
+
+  // Build document grid
+  const cards=D.vault.map((v,i)=>{
+    const isImg=v.dataType&&v.dataType.startsWith('image');
+    const isPdf=v.dataType&&v.dataType==='application/pdf';
+    let thumbHtml='';
+    if(isImg&&v.data){
+      thumbHtml=`<img class="doc-card-thumb" src="${v.data}" alt="${v.name}" onclick="openLightbox(${i})" style="cursor:zoom-in">`;
+    } else if(isPdf){
+      thumbHtml=`<div class="doc-card-thumb-placeholder pdf-thumb"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg></div>`;
+    } else {
+      thumbHtml=`<div class="doc-card-thumb-placeholder"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>`;
+    }
+    const size=v.data?Math.round(v.data.length*0.75/1024)+'KB':'logged';
+    return`<div class="doc-card">
+      ${thumbHtml}
+      <div class="doc-card-body">
+        <div class="doc-card-name" title="${v.name}">${v.name}</div>
+        <div class="doc-card-meta">${badge(v.cat,'badge-navy')} <span>${size}</span></div>
+        ${v.notes?`<div style="font-size:11px;color:var(--text2);margin-top:5px;line-height:1.4">${v.notes}</div>`:''}
       </div>
-      ${v.notes?`<div class="item-body" style="margin-top:7px">${v.notes}</div>`:''}
-    </div>`).join('');
+      <div class="doc-card-actions">
+        ${isImg&&v.data?`<button class="btn btn-sm" onclick="openLightbox(${i})">View</button>`:''}
+        ${v.data?`<button class="btn btn-sm" onclick="downloadDoc(${i})">Save</button>`:''}
+        <button class="btn btn-sm btn-danger" onclick="deleteVault(${i})">Remove</button>
+      </div>
+    </div>`;
+  }).join('');
+
   ca.innerHTML=`
-  <p class="section-desc">Log all supporting documents. A well-stocked vault strengthens your evidence pack significantly.</p>
+  <p class="section-desc">Store photographs, scanned documents, and uploaded files. Everything is saved on your device only — nothing is sent to any server.</p>
+
+  <!-- ── Add document row ── -->
   <div class="card">
-    <div class="card-title">Logged documents (${D.vault.length})</div>
-    ${D.vault.length?rows:`<div class="empty"><p>No documents logged yet</p></div>`}
-    <button class="btn btn-navy" style="margin-top:10px" onclick="addVaultItem()">+ Log document</button>
+    <div class="card-title">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      Add to evidence vault
+    </div>
+    <div class="vault-add-row">
+      <!-- Camera -->
+      <button class="vault-add-btn" onclick="openCamera()" title="Take a photo with your camera">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20 7h-3.2L15 4H9L7.2 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><circle cx="12" cy="13" r="3"/></svg>
+        Take a photo
+      </button>
+      <!-- Upload image -->
+      <label class="vault-add-btn" title="Upload a photo or image from your device">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        Upload image
+        <input type="file" accept="image/*" onchange="handleFileUpload(event,'image')">
+      </label>
+      <!-- Upload document -->
+      <label class="vault-add-btn" title="Upload a PDF, Word doc, or other file">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Upload document
+        <input type="file" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.gif,.webp" onchange="handleFileUpload(event,'document')">
+      </label>
+    </div>
+    <div class="upload-progress" id="upload-progress">
+      <div class="upload-progress-fill" id="upload-progress-fill"></div>
+    </div>
   </div>
-  <div class="card" id="vault-form" style="display:none">
-    <div class="card-title">Log a document</div>
+
+  <!-- ── Document details form (appears after capture/upload) ── -->
+  <div class="card" id="vault-meta-form" style="display:none">
+    <div class="card-title">Name and categorise this document</div>
     <div class="form-grid">
-      <div class="fg"><label>Document name</label><input id="vlt-name" placeholder="e.g. GP letter June 2026"></div>
+      <div class="fg"><label>Document name *</label><input id="vlt-name" placeholder="e.g. GP letter June 2026"></div>
       <div class="fg"><label>Category</label><select id="vlt-cat">${VAULT_CATS.map(c=>`<option>${c}</option>`).join('')}</select></div>
     </div>
-    <div class="fg" style="margin-bottom:10px"><label>Notes (optional)</label><textarea id="vlt-notes" rows="2" placeholder="Key information in this document"></textarea></div>
+    <div class="fg" style="margin-bottom:12px"><label>Notes (optional)</label>
+      <textarea id="vlt-notes" rows="2" placeholder="Key information contained in this document"></textarea>
+    </div>
     <div style="display:flex;gap:8px">
-      <button class="btn btn-navy" onclick="saveVault()">Save</button>
-      <button class="btn" onclick="document.getElementById('vault-form').style.display='none'">Cancel</button>
+      <button class="btn btn-navy" onclick="saveVaultEntry()">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Save to vault
+      </button>
+      <button class="btn" onclick="cancelVaultEntry()">Cancel</button>
     </div>
   </div>
+
+  <!-- ── Stored documents grid ── -->
   <div class="card">
-    <div class="card-title">Gap analysis</div>
+    <div class="card-title">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      Stored documents (${D.vault.length})
+    </div>
+    ${D.vault.length
+      ? `<div class="doc-grid">${cards}</div>`
+      : `<div class="empty">
+          <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          <p>No documents stored yet.<br>Take a photo or upload a file above.</p>
+        </div>`
+    }
+  </div>
+
+  <!-- ── Gap analysis ── -->
+  <div class="card">
+    <div class="card-title">Evidence gaps</div>
     ${buildGapAnalysis()}
   </div>`;
 }
-function addVaultItem(){document.getElementById('vault-form').style.display='block';document.getElementById('vault-form').scrollIntoView({behavior:'smooth'})}
-function saveVault(){
+
+// ── File upload handler ────────────────────────────────────────────────────
+function handleFileUpload(evt, type){
+  const file=evt.target.files[0];
+  if(!file){return}
+  const maxMB=type==='image'?10:20;
+  if(file.size>maxMB*1024*1024){toast(`File too large — max ${maxMB}MB`);evt.target.value='';return}
+
+  // Show progress
+  const prog=document.getElementById('upload-progress');
+  const fill=document.getElementById('upload-progress-fill');
+  if(prog){prog.style.display='block';fill.style.width='0%'}
+
+  const reader=new FileReader();
+  reader.onprogress=(e)=>{if(e.lengthComputable&&fill)fill.style.width=Math.round(e.loaded/e.total*80)+'%'};
+  reader.onload=(e)=>{
+    if(fill)fill.style.width='100%';
+    setTimeout(()=>{if(prog)prog.style.display='none'},600);
+    _pendingPhoto=e.target.result;
+    _pendingMeta={dataType:file.type,source:'upload'};
+    showVaultMetaForm(file.name.replace(/\.[^.]+$/,''));
+    evt.target.value='';
+  };
+  reader.onerror=()=>toast('Could not read file — please try again');
+  reader.readAsDataURL(file);
+}
+
+// ── Camera functions ───────────────────────────────────────────────────────
+async function openCamera(){
+  const modal=document.getElementById('camera-modal');
+  try{
+    _camStream=await navigator.mediaDevices.getUserMedia({
+      video:{facingMode:_camFacing,width:{ideal:1920},height:{ideal:1080}},audio:false
+    });
+    document.getElementById('camera-video').srcObject=_camStream;
+    modal.classList.add('open');
+  } catch(err){
+    if(err.name==='NotAllowedError'){
+      toast('Camera permission denied — please allow camera access in your browser settings');
+    } else if(err.name==='NotFoundError'){
+      toast('No camera found on this device');
+    } else {
+      toast('Camera unavailable — try uploading a file instead');
+    }
+  }
+}
+function closeCamera(){
+  if(_camStream){_camStream.getTracks().forEach(t=>t.stop());_camStream=null}
+  document.getElementById('camera-modal').classList.remove('open');
+}
+async function switchCamera(){
+  _camFacing=_camFacing==='environment'?'user':'environment';
+  closeCamera();
+  await openCamera();
+}
+function capturePhoto(){
+  const video=document.getElementById('camera-video');
+  const canvas=document.getElementById('camera-canvas');
+  canvas.width=video.videoWidth;
+  canvas.height=video.videoHeight;
+  canvas.getContext('2d').drawImage(video,0,0);
+  const dataUrl=canvas.toDataURL('image/jpeg',0.88);
+  closeCamera();
+  // Show preview
+  document.getElementById('preview-img').src=dataUrl;
+  document.getElementById('camera-preview').classList.add('open');
+  _pendingPhoto=dataUrl;
+  _pendingMeta={dataType:'image/jpeg',source:'camera'};
+}
+function retakePhoto(){
+  document.getElementById('camera-preview').classList.remove('open');
+  _pendingPhoto=null;_pendingMeta=null;
+  openCamera();
+}
+function confirmPhoto(){
+  document.getElementById('camera-preview').classList.remove('open');
+  const d=new Date();
+  const suggested=`Photo ${d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})} ${d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}`;
+  showVaultMetaForm(suggested);
+}
+
+// ── Vault meta form ────────────────────────────────────────────────────────
+function showVaultMetaForm(suggestedName=''){
+  const form=document.getElementById('vault-meta-form');
+  if(!form)return;
+  document.getElementById('vlt-name').value=suggestedName;
+  document.getElementById('vlt-notes').value='';
+  form.style.display='block';
+  form.scrollIntoView({behavior:'smooth',block:'start'});
+  setTimeout(()=>document.getElementById('vlt-name').focus(),400);
+}
+function cancelVaultEntry(){
+  _pendingPhoto=null;_pendingMeta=null;
+  const form=document.getElementById('vault-meta-form');
+  if(form)form.style.display='none';
+}
+function saveVaultEntry(){
   const name=document.getElementById('vlt-name').value.trim();
   if(!name){toast('Please enter a document name');return}
-  D.vault.push({name,cat:document.getElementById('vlt-cat').value,notes:document.getElementById('vlt-notes').value});
-  save();vault();toast('Document logged');
+  const entry={
+    name,
+    cat:document.getElementById('vlt-cat').value,
+    notes:document.getElementById('vlt-notes').value,
+    data:_pendingPhoto||null,
+    dataType:_pendingMeta?_pendingMeta.dataType:'',
+    source:_pendingMeta?_pendingMeta.source:'manual',
+    addedAt:new Date().toISOString()
+  };
+  D.vault.push(entry);
+  _pendingPhoto=null;_pendingMeta=null;
+  save();vault();
+  toast('Document saved to vault ✓');
 }
-function deleteVault(i){D.vault.splice(i,1);save();vault();toast('Removed')}
+function deleteVault(i){
+  if(!confirm('Remove this document from the vault?'))return;
+  D.vault.splice(i,1);save();vault();toast('Removed');
+}
+
+// ── Download stored doc ────────────────────────────────────────────────────
+function downloadDoc(i){
+  const v=D.vault[i];
+  if(!v||!v.data)return;
+  const ext=v.dataType==='application/pdf'?'.pdf':
+             v.dataType==='image/png'?'.png':
+             v.dataType==='image/jpeg'?'.jpg':'.bin';
+  const a=document.createElement('a');
+  a.href=v.data;
+  a.download=(v.name||'document').replace(/[^a-z0-9\-_ ]/gi,'_')+ext;
+  a.click();
+}
+
+// ── Lightbox ───────────────────────────────────────────────────────────────
+function openLightbox(i){
+  const v=D.vault[i];
+  if(!v||!v.data)return;
+  document.getElementById('lightbox-img').src=v.data;
+  document.getElementById('lightbox-label').textContent=v.name+' — tap outside to close';
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open')}
+
+// ── Gap analysis ───────────────────────────────────────────────────────────
 function buildGapAnalysis(){
   const cats=D.vault.map(v=>v.cat);
   const gaps=[
