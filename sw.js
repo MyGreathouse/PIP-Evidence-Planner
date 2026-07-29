@@ -2,7 +2,7 @@
 // Caches the entire app so it works fully offline after first load.
 // No user data is ever sent to any server — everything stays in localStorage.
 
-const CACHE = 'pip-eb-v1';
+const CACHE = 'pip-eb-v2';
 const ASSETS = [
   './', './index.html', './manifest.json', './sw.js',
   './icons/icon-72.png','./icons/icon-96.png','./icons/icon-128.png',
