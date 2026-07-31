@@ -865,7 +865,7 @@ const ENC={
       const stored=localStorage.getItem(this.KEY_STORE);
       if(stored){
         try{this._cryptoKey=await this.importKey(stored);}
-        catch{this._cryptoKey=await this.generateKey();await this._saveKey();}
+        catch(e){this._cryptoKey=await this.generateKey();await this._saveKey();}
       } else {
         this._cryptoKey=await this.generateKey();
         await this._saveKey();
@@ -1131,7 +1131,7 @@ async function loadData(){
   const legacy=localStorage.getItem(KEY);
   if(legacy){
     try{D=Object.assign({},D,JSON.parse(legacy));await save();localStorage.removeItem(KEY);toast('Data migrated to encrypted storage ✓');}
-    catch{}
+    catch(e){console.warn('PIP: legacy migration failed',e);}
   }
 }
 
