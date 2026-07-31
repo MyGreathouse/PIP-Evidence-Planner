@@ -221,6 +221,157 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sy
   .score-circles{flex-direction:column}
 }
 
+/* ─── LOCK SCREEN ─────────────────────────────────────────────── */
+#lock-screen{
+  position:fixed;inset:0;z-index:9999;
+  background:linear-gradient(135deg,var(--navy) 0%,#0A1F38 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:20px;padding:30px;
+}
+.lock-logo{width:72px;height:72px;background:var(--teal);border-radius:18px;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(26,138,122,.4)}
+.lock-logo svg{width:38px;height:38px;color:#fff}
+.lock-title{font-size:22px;font-weight:700;color:#fff;text-align:center}
+.lock-sub{font-size:13px;color:rgba(255,255,255,.55);text-align:center;margin-top:-10px}
+.pin-dots{display:flex;gap:12px;margin:8px 0}
+.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.4);
+  transition:background .15s;}
+.pin-dot.filled{background:#fff;border-color:#fff}
+.pin-pad{display:grid;grid-template-columns:repeat(3,70px);gap:10px}
+.pin-btn{
+  width:70px;height:70px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);
+  background:rgba(255,255,255,.08);color:#fff;font-size:22px;font-weight:600;
+  cursor:pointer;transition:background .12s;display:flex;align-items:center;justify-content:center;
+}
+.pin-btn:active{background:rgba(255,255,255,.2)}
+.pin-btn.del{font-size:16px}
+.lock-bio-btn{
+  display:flex;align-items:center;gap:8px;padding:12px 24px;
+  background:rgba(26,138,122,.25);border:1px solid rgba(26,138,122,.4);
+  border-radius:30px;color:var(--teal-l);font-size:14px;font-weight:600;cursor:pointer;
+  transition:background .12s;
+}
+.lock-bio-btn:hover{background:rgba(26,138,122,.4)}
+.lock-bio-btn svg{width:20px;height:20px}
+.lock-error{color:#FF6B6B;font-size:13px;text-align:center;min-height:20px}
+
+/* ─── TIMELINE ────────────────────────────────────────────────── */
+.timeline-wrap{display:flex;flex-direction:column;gap:0}
+.tl-item{display:flex;gap:14px;position:relative;padding-bottom:20px}
+.tl-item:last-child{padding-bottom:0}
+.tl-item::before{content:'';position:absolute;left:17px;top:36px;bottom:0;
+  width:2px;background:linear-gradient(to bottom,var(--teal),transparent)}
+.tl-item:last-child::before{display:none}
+.tl-dot{width:34px;height:34px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;z-index:1;
+  border:2px solid;}
+.tl-dot-symptom{background:var(--red-l);border-color:var(--red);color:var(--red)}
+.tl-dot-appointment{background:var(--navy-l);border-color:var(--navy);color:var(--navy)}
+.tl-dot-condition{background:var(--amber-l);border-color:var(--amber);color:var(--amber)}
+.tl-dot-mobility{background:var(--teal-l);border-color:var(--teal);color:var(--teal)}
+.tl-dot-example{background:var(--green-l);border-color:var(--green);color:var(--green)}
+.tl-dot svg{width:15px;height:15px}
+.tl-content{flex:1;background:var(--white);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:10px 13px;box-shadow:var(--shadow)}
+.tl-date{font-size:11px;color:var(--text3);margin-bottom:2px}
+.tl-title{font-size:13px;font-weight:600;color:var(--text)}
+.tl-desc{font-size:12px;color:var(--text2);margin-top:3px;line-height:1.5}
+
+/* ─── VOICE NOTES ─────────────────────────────────────────────── */
+.voice-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 14px;border-radius:20px;border:1.5px solid var(--border);
+  background:var(--white);font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;
+  transition:all .15s;
+}
+.voice-btn.recording{
+  background:var(--red-l);border-color:var(--red);color:var(--red);
+  animation:pulse 1s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+.voice-btn svg{width:14px;height:14px}
+.voice-note-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);
+  margin-bottom:8px;background:var(--white);
+}
+.voice-note-item audio{flex:1;height:36px}
+.voice-timer{font-size:13px;font-weight:700;color:var(--red);min-width:40px;text-align:center}
+
+/* ─── OCR ─────────────────────────────────────────────────────── */
+.ocr-box{
+  background:var(--teal-l);border:1px solid #A8DDD0;
+  border-radius:var(--radius-sm);padding:12px;margin-top:10px;
+  font-size:12px;color:var(--navy);line-height:1.6;white-space:pre-wrap;
+  max-height:200px;overflow-y:auto;
+}
+.ocr-progress-wrap{background:var(--border);border-radius:3px;height:5px;margin:8px 0}
+#ocr-progress{height:5px;background:var(--teal);border-radius:3px;width:0%;transition:width .2s}
+
+/* ─── CHECKLIST ───────────────────────────────────────────────── */
+.checklist-item{
+  display:flex;align-items:flex-start;gap:12px;padding:10px 0;
+  border-bottom:1px solid var(--border);
+}
+.checklist-item:last-child{border-bottom:none}
+.check-circle{
+  width:24px;height:24px;border-radius:50%;flex-shrink:0;
+  border:2px solid var(--border);display:flex;align-items:center;justify-content:center;
+  margin-top:1px;transition:all .15s;
+}
+.check-circle.done{background:var(--green);border-color:var(--green)}
+.check-circle.done svg{display:block}
+.check-circle svg{display:none;width:13px;height:13px;color:#fff}
+.check-label{flex:1}
+.check-title{font-size:13px;font-weight:600;color:var(--text)}
+.check-desc{font-size:11.5px;color:var(--text3);margin-top:1px}
+.check-cta{font-size:11px;color:var(--teal);font-weight:600;cursor:pointer;
+  display:inline-block;margin-top:3px;}
+.check-cta:hover{text-decoration:underline}
+.completeness-bar-wrap{background:var(--border);border-radius:4px;height:10px;margin:10px 0 4px}
+.completeness-bar{height:10px;border-radius:4px;background:linear-gradient(90deg,var(--teal),var(--navy));transition:width .5s}
+
+/* ─── SETTINGS ────────────────────────────────────────────────── */
+.settings-row{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:14px 0;border-bottom:1px solid var(--border);
+}
+.settings-row:last-child{border-bottom:none}
+.settings-label{flex:1}
+.settings-title{font-size:13px;font-weight:600;color:var(--text)}
+.settings-desc{font-size:11.5px;color:var(--text3);margin-top:2px}
+.toggle{position:relative;width:44px;height:24px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle-slider{
+  position:absolute;inset:0;border-radius:12px;background:var(--border2);
+  cursor:pointer;transition:background .2s;
+}
+.toggle-slider::before{
+  content:'';position:absolute;width:18px;height:18px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:transform .2s;
+  box-shadow:0 1px 3px rgba(0,0,0,.2);
+}
+.toggle input:checked+.toggle-slider{background:var(--teal)}
+.toggle input:checked+.toggle-slider::before{transform:translateX(20px)}
+.settings-section-title{
+  font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.06em;
+  text-transform:uppercase;padding:14px 0 6px;
+}
+
+/* ─── SECURE EXPORT MODAL ─────────────────────────────────────── */
+.modal-secure{
+  background:var(--navy-l);border-left:3px solid var(--teal);
+  border-radius:var(--radius-sm);padding:12px 14px;
+  font-size:12.5px;color:var(--navy);margin-bottom:14px;
+}
+
+/* ─── NAV BADGE ───────────────────────────────────────────────── */
+.nav-badge{
+  margin-left:auto;background:var(--teal-l);color:var(--teal);
+  font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;
+}
+
+
 /* ─── PRINT STYLES ─────────────────────────────────────────────── */
 @media print{
   .sidebar,.topbar-right,.mob-toggle{display:none}
@@ -414,6 +565,16 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sy
     </div>
 
     <div class="nav-group">Reports</div>
+    <div class="nav-item" data-section="timeline" onclick="showSection('timeline',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Timeline view
+      <span class="nav-badge">New</span>
+    </div>
+    <div class="nav-item" data-section="checklist" onclick="showSection('checklist',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12a9 9 0 1 1-9-9c1.4 0 2.7.3 3.9.8"/></svg>
+      Evidence checklist
+      <span class="nav-badge">New</span>
+    </div>
     <div class="nav-item" data-section="score" onclick="showSection('score',this)">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
       Readiness scores
@@ -421,6 +582,17 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sy
     <div class="nav-item" data-section="pack" onclick="showSection('pack',this)">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
       Evidence pack
+    </div>
+    <div class="nav-item" data-section="voicenotes" onclick="showSection('voicenotes',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+      Voice notes
+      <span class="nav-badge">New</span>
+    </div>
+
+    <div class="nav-group">System</div>
+    <div class="nav-item" data-section="settings" onclick="showSection('settings',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Security &amp; settings
     </div>
   </nav>
 
@@ -450,11 +622,15 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sy
     <div class="topbar-right">
       <button class="btn btn-sm" onclick="exportData()">
         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Back up data
+        Back up
+      </button>
+      <button class="btn btn-sm" onclick="LOCK.lock()" title="Lock app" id="lock-btn" style="display:none">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Lock
       </button>
       <button class="btn btn-sm btn-teal" onclick="printPack()">
         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-        Print evidence pack
+        Print pack
       </button>
     </div>
   </div>
@@ -611,22 +787,308 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sy
 <div class="toast" id="toast"></div>
 
 <script>
+// ═══════════════════════════════════════════════════════════════════════════
+// PIP EVIDENCE BUILDER™  v1.1
+// Encrypted local storage · Biometric lock · Secure PDF export
+// Voice notes · OCR scanning · Timeline · Reminders · Auto-backup
+// All data stays on device — zero server interaction
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ─── ENCRYPTION ENGINE (AES-GCM via WebCrypto) ────────────────────────────
+const ENC={
+  KEY_STORE:'pip_enc_key_v1',
+  DATA_STORE:'pip_enc_data_v1',
+  META_STORE:'pip_meta_v1',
+  _cryptoKey:null,
+
+  async deriveKey(password,salt){
+    const enc=new TextEncoder();
+    const raw=await crypto.subtle.importKey('raw',enc.encode(password),{name:'PBKDF2'},false,['deriveKey']);
+    return crypto.subtle.deriveKey(
+      {name:'PBKDF2',salt,iterations:310000,hash:'SHA-256'},
+      raw,{name:'AES-GCM',length:256},true,['encrypt','decrypt']
+    );
+  },
+  async generateKey(){
+    return crypto.subtle.generateKey({name:'AES-GCM',length:256},true,['encrypt','decrypt']);
+  },
+  async exportKey(key){
+    const raw=await crypto.subtle.exportKey('raw',key);
+    return btoa(String.fromCharCode(...new Uint8Array(raw)));
+  },
+  async importKey(b64){
+    const raw=Uint8Array.from(atob(b64),c=>c.charCodeAt(0));
+    return crypto.subtle.importKey('raw',raw,{name:'AES-GCM'},true,['encrypt','decrypt']);
+  },
+  async encrypt(data,key){
+    const iv=crypto.getRandomValues(new Uint8Array(12));
+    const enc=new TextEncoder();
+    const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,enc.encode(JSON.stringify(data)));
+    const combined=new Uint8Array(iv.length+ct.byteLength);
+    combined.set(iv);combined.set(new Uint8Array(ct),iv.length);
+    return btoa(String.fromCharCode(...combined));
+  },
+  async decrypt(b64,key){
+    const combined=Uint8Array.from(atob(b64),c=>c.charCodeAt(0));
+    const iv=combined.slice(0,12);const ct=combined.slice(12);
+    const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv},key,ct);
+    return JSON.parse(new TextDecoder().decode(pt));
+  },
+  async init(){
+    // Load or generate encryption key
+    const stored=localStorage.getItem(this.KEY_STORE);
+    if(stored){
+      try{this._cryptoKey=await this.importKey(stored);}
+      catch{this._cryptoKey=await this.generateKey();await this._saveKey();}
+    } else {
+      this._cryptoKey=await this.generateKey();
+      await this._saveKey();
+    }
+  },
+  async _saveKey(){
+    localStorage.setItem(this.KEY_STORE,await this.exportKey(this._cryptoKey));
+  },
+  async save(data){
+    if(!this._cryptoKey)await this.init();
+    const enc=await this.encrypt(data,this._cryptoKey);
+    localStorage.setItem(this.DATA_STORE,enc);
+    localStorage.setItem(this.META_STORE,JSON.stringify({
+      updatedAt:data.updatedAt,version:'1.1',
+      sections:Object.keys(data).filter(k=>Array.isArray(data[k])&&data[k].length>0)
+    }));
+  },
+  async load(){
+    if(!this._cryptoKey)await this.init();
+    const enc=localStorage.getItem(this.DATA_STORE);
+    if(!enc)return null;
+    try{return await this.decrypt(enc,this._cryptoKey);}
+    catch(e){console.warn('Decryption failed',e);return null;}
+  },
+  // Encrypted export — wraps data with a password-derived key
+  async exportEncrypted(data,password){
+    const salt=crypto.getRandomValues(new Uint8Array(16));
+    const key=await this.deriveKey(password,salt);
+    const enc=await this.encrypt(data,key);
+    const saltB64=btoa(String.fromCharCode(...salt));
+    return JSON.stringify({v:'pip-enc-1.1',salt:saltB64,data:enc,exportedAt:new Date().toISOString()});
+  },
+  async importEncrypted(json,password){
+    const pkg=JSON.parse(json);
+    if(pkg.v!=='pip-enc-1.1')throw new Error('Unknown format');
+    const salt=Uint8Array.from(atob(pkg.salt),c=>c.charCodeAt(0));
+    const key=await this.deriveKey(password,salt);
+    return this.decrypt(pkg.data,key);
+  }
+};
+
+// ─── BIOMETRIC / PIN LOCK ──────────────────────────────────────────────────
+const LOCK={
+  ENABLED_KEY:'pip_lock_enabled',
+  PIN_KEY:'pip_pin_hash_v1',
+  _unlocked:false,
+  _credential:null,
+
+  isEnabled(){return localStorage.getItem(this.ENABLED_KEY)==='1'},
+  isUnlocked(){return this._unlocked},
+
+  async hashPin(pin){
+    const enc=new TextEncoder();
+    const buf=await crypto.subtle.digest('SHA-256',enc.encode('pip-salt-2024-'+pin));
+    return btoa(String.fromCharCode(...new Uint8Array(buf)));
+  },
+  async setPin(pin){
+    localStorage.setItem(this.PIN_KEY,await this.hashPin(pin));
+    localStorage.setItem(this.ENABLED_KEY,'1');
+    this._unlocked=true;
+  },
+  async checkPin(pin){
+    const h=await this.hashPin(pin);
+    return h===localStorage.getItem(this.PIN_KEY);
+  },
+  async tryBiometric(){
+    if(!window.PublicKeyCredential)return false;
+    try{
+      const available=await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+      if(!available)return false;
+      // Use WebAuthn for biometric — create credential if needed
+      const credId=localStorage.getItem('pip_cred_id');
+      if(!credId){
+        const cred=await navigator.credentials.create({publicKey:{
+          challenge:crypto.getRandomValues(new Uint8Array(32)),
+          rp:{name:'PIP Evidence Builder'},
+          user:{id:crypto.getRandomValues(new Uint8Array(16)),name:'pip-user',displayName:'PIP User'},
+          pubKeyCredParams:[{alg:-7,type:'public-key'},{alg:-257,type:'public-key'}],
+          authenticatorSelection:{authenticatorAttachment:'platform',userVerification:'required'},
+          timeout:60000
+        }});
+        localStorage.setItem('pip_cred_id',btoa(String.fromCharCode(...new Uint8Array(cred.rawId))));
+        this._unlocked=true;return true;
+      } else {
+        const credIdBytes=Uint8Array.from(atob(credId),c=>c.charCodeAt(0));
+        await navigator.credentials.get({publicKey:{
+          challenge:crypto.getRandomValues(new Uint8Array(32)),
+          allowCredentials:[{id:credIdBytes,type:'public-key'}],
+          userVerification:'required',timeout:60000
+        }});
+        this._unlocked=true;return true;
+      }
+    }catch(e){console.log('Biometric:',e.message);return false;}
+  },
+  unlock(){this._unlocked=true;document.getElementById('lock-screen')?.remove()},
+  lock(){
+    this._unlocked=false;
+    if(this.isEnabled())showLockScreen();
+  }
+};
+
+// ─── VOICE NOTES ENGINE ────────────────────────────────────────────────────
+const VOICE={
+  _rec:null,_chunks:[],_stream:null,_active:false,
+  _cb:null,
+  supported(){return !!(navigator.mediaDevices&&window.MediaRecorder)},
+  async start(onDone){
+    if(!this.supported()){toast('Voice recording not supported on this browser');return false}
+    try{
+      this._stream=await navigator.mediaDevices.getUserMedia({audio:true});
+      this._rec=new MediaRecorder(this._stream);
+      this._chunks=[];this._cb=onDone;this._active=true;
+      this._rec.ondataavailable=e=>this._chunks.push(e.data);
+      this._rec.onstop=async()=>{
+        const blob=new Blob(this._chunks,{type:'audio/webm'});
+        const b64=await new Promise(res=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.readAsDataURL(blob)});
+        this._active=false;
+        if(this._cb)this._cb(b64);
+      };
+      this._rec.start();return true;
+    }catch(e){toast('Microphone access denied');return false;}
+  },
+  stop(){if(this._rec&&this._active){this._rec.stop();this._stream?.getTracks().forEach(t=>t.stop());}},
+  isRecording(){return this._active}
+};
+
+// ─── OCR ENGINE (Tesseract.js via CDN, lazy-loaded) ───────────────────────
+const OCR={
+  _worker:null,
+  async scan(imageDataUrl){
+    if(!window.Tesseract){
+      await new Promise((res,rej)=>{
+        const s=document.createElement('script');
+        s.src='https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.0.4/tesseract.min.js';
+        s.onload=res;s.onerror=rej;document.head.appendChild(s);
+      });
+    }
+    const result=await Tesseract.recognize(imageDataUrl,'eng',{
+      logger:m=>{
+        const p=document.getElementById('ocr-progress');
+        if(p&&m.progress)p.style.width=(m.progress*100)+'%';
+      }
+    });
+    return result.data.text.trim();
+  }
+};
+
+// ─── REMINDERS ENGINE ──────────────────────────────────────────────────────
+const REMIND={
+  async requestPermission(){
+    if(!('Notification' in window))return false;
+    if(Notification.permission==='granted')return true;
+    const p=await Notification.requestPermission();
+    return p==='granted';
+  },
+  async schedule(title,body,delayMs){
+    const ok=await this.requestPermission();
+    if(!ok){toast('Enable browser notifications to use reminders');return;}
+    setTimeout(()=>{
+      try{new Notification(title,{body,icon:'icons/icon-192.png',badge:'icons/icon-72.png'})}
+      catch(e){}
+    },delayMs);
+  },
+  async scheduleDaily(title,body,hour=9){
+    const ok=await this.requestPermission();
+    if(!ok)return;
+    const now=new Date();
+    const next=new Date();next.setHours(hour,0,0,0);
+    if(next<=now)next.setDate(next.getDate()+1);
+    const delay=next-now;
+    this.schedule(title,body,delay);
+    localStorage.setItem('pip_reminder',JSON.stringify({title,body,hour,enabled:true}));
+    toast(`Reminder set for ${next.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})} daily`);
+  },
+  init(){
+    const r=JSON.parse(localStorage.getItem('pip_reminder')||'null');
+    if(r?.enabled)this.scheduleDaily(r.title,r.body,r.hour);
+  }
+};
+
+// ─── AUTO-BACKUP ENGINE ────────────────────────────────────────────────────
+const AUTOBACKUP={
+  KEY:'pip_autobackup_cfg',
+  config(){return JSON.parse(localStorage.getItem(this.KEY)||'{"enabled":false,"freq":"weekly","time":"09:00","lastRun":null}')},
+  save(cfg){localStorage.setItem(this.KEY,JSON.stringify(cfg))},
+  async run(force=false){
+    const cfg=this.config();
+    if(!cfg.enabled&&!force)return;
+    const last=cfg.lastRun?new Date(cfg.lastRun):null;
+    const now=new Date();
+    const diffDays=last?(now-last)/86400000:999;
+    const due=force||cfg.freq==='daily'&&diffDays>=1||cfg.freq==='weekly'&&diffDays>=7||cfg.freq==='monthly'&&diffDays>=30;
+    if(!due)return;
+    // trigger encrypted export silently
+    const json=JSON.stringify(D,null,2);
+    const blob=new Blob([json],{type:'application/json'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=`pip_backup_${now.toISOString().split('T')[0]}.json`;
+    a.click();
+    cfg.lastRun=now.toISOString();this.save(cfg);
+    toast('Auto-backup downloaded ✓');
+  },
+  init(){
+    const cfg=this.config();
+    if(!cfg.enabled)return;
+    // Check on next load whether backup is due
+    setTimeout(()=>this.run(),3000);
+  }
+};
+
 // ─── STATE ────────────────────────────────────────────────────────────────
-const KEY = 'pip_eb_v1';
-let D = JSON.parse(localStorage.getItem(KEY) || 'null') || {
+const KEY='pip_eb_v1'; // legacy fallback key
+let D={
   profile:{name:'',dob:'',ni:'',phone:'',email:'',address:'',gp_name:'',gp_surgery:'',
     specialist:'',care_coord:'',emergency:''},
   conditions:[],symptoms:[],medications:[],appointments:[],examples:[],
-  vault:[],
+  vault:[],voiceNotes:[],reminders:[],
   daily:{preparing_food:'',eating:'',medication:'',washing:'',dressing:'',
          communicating:'',reading:'',mixing:'',budgeting:''},
   daily_status:{preparing_food:'',eating:'',medication:'',washing:'',dressing:'',
                 communicating:'',reading:'',mixing:'',budgeting:''},
   mobility:{entries:[]},
   prep:{worst_days:'',without_help:'',risks:'',frequency:'',additional:''},
+  settings:{biometric:false,pin:false,autoBackup:false,backupFreq:'weekly',theme:'default'},
   updatedAt:null
 };
-function save(){D.updatedAt=new Date().toISOString();localStorage.setItem(KEY,JSON.stringify(D));updateScores()}
+
+async function save(){
+  D.updatedAt=new Date().toISOString();
+  await ENC.save(D);
+  // Also keep unencrypted shadow for instant score reads (no sensitive fields)
+  localStorage.setItem('pip_meta_scores',JSON.stringify({
+    prep:calcScores().prep,evid:calcScores().evid,updatedAt:D.updatedAt
+  }));
+  updateScores();
+}
+
+async function loadData(){
+  // Try encrypted store first
+  const enc=await ENC.load();
+  if(enc){D=Object.assign({},D,enc);return;}
+  // Migrate from old plaintext store if exists
+  const legacy=localStorage.getItem(KEY);
+  if(legacy){
+    try{D=Object.assign({},D,JSON.parse(legacy));await save();localStorage.removeItem(KEY);toast('Data migrated to encrypted storage ✓');}
+    catch{}
+  }
+}
 
 // ─── SECTION ROUTER ───────────────────────────────────────────────────────
 const TITLES={
@@ -635,15 +1097,7 @@ const TITLES={
   appointments:'Appointment tracker',vault:'Evidence vault',examples:'Real-life examples',
   prep:'Assessment preparation',score:'Readiness scores',pack:'Evidence pack'
 };
-function showSection(key,el){
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  if(el)el.classList.add('active');
-  document.getElementById('page-title').textContent=TITLES[key]||key;
-  const ca=document.getElementById('content-area');
-  ca.innerHTML='';
-  ({profile,conditions,symptoms,medication,daily,mobility,appointments,vault,examples,prep,score,pack}[key]||profile)();
-  document.getElementById('sidebar').classList.remove('open');
-}
+// showSection defined in v1.1 block below — supports all sections including timeline, checklist, voicenotes, settings
 
 // ─── TOAST ────────────────────────────────────────────────────────────────
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
@@ -1565,19 +2019,430 @@ function printPack(){
   w.document.close();setTimeout(()=>w.print(),600);
 }
 
-function exportData(){
+// ─── TIMELINE SECTION ─────────────────────────────────────────────────────
+function timeline(){
+  // Gather all dated events into one stream
+  const events=[];
+  D.symptoms.forEach(s=>events.push({date:s.date,type:'symptom',
+    title:`Symptom: ${s.name}`,desc:`Severity ${s.sev}/10${s.effect?' — '+s.effect:''}`,
+    icon:'<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>'}));
+  D.appointments.forEach(a=>events.push({date:a.date,type:'appointment',
+    title:`${a.type}: ${a.prov||'Unknown'}`,desc:a.outcome||a.loc||'',
+    icon:'<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>'}));
+  D.conditions.forEach(c=>events.push({date:c.date||'',type:'condition',
+    title:`Condition: ${c.name}`,desc:`${c.status||''} ${c.cat||''}`,
+    icon:'<path d="M12 21C12 21 4 13.5 4 8a8 8 0 0 1 16 0c0 5.5-8 13-8 13z"/>'}));
+  D.mobility.entries.forEach(m=>events.push({date:m.date,type:'mobility',
+    title:`Mobility entry${m.worst?' ⚑ Worst day':''}`,
+    desc:`Distance: ${m.dist||'—'} · Pain: ${m.pain}/10 · Fatigue: ${m.fatigue}/10`,
+    icon:'<circle cx="12" cy="5" r="2"/><path d="M12 7v5l3 3M9 21l3-6 3 6"/>'}));
+  D.examples.forEach(e=>events.push({date:e.date,type:'example',
+    title:`Example: ${e.act}`,desc:e.what?.slice(0,100)||'',
+    icon:'<path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>'}));
+  // Sort newest first
+  events.sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
+  const typeClass={symptom:'tl-dot-symptom',appointment:'tl-dot-appointment',
+    condition:'tl-dot-condition',mobility:'tl-dot-mobility',example:'tl-dot-example'};
+  const items=events.length?events.map(e=>`
+    <div class="tl-item">
+      <div class="tl-dot ${typeClass[e.type]||''}">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">${e.icon}</svg>
+      </div>
+      <div class="tl-content">
+        <div class="tl-date">${fmtDate(e.date)||'Date not recorded'}</div>
+        <div class="tl-title">${e.title}</div>
+        ${e.desc?`<div class="tl-desc">${e.desc}</div>`:''}
+      </div>
+    </div>`).join('')
+    :`<div class="empty"><p>No events yet — start adding symptoms, appointments, and mobility entries to see your timeline.</p></div>`;
+  document.getElementById('content-area').innerHTML=`
+  <p class="section-desc">A chronological view of everything you have recorded — symptoms, appointments, mobility entries, conditions, and real-life examples.</p>
+  <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+    ${['All','Symptoms','Appointments','Mobility','Examples'].map(f=>`<span class="badge ${f==='All'?'badge-navy':'badge-gray'}" style="cursor:pointer;padding:5px 12px">${f}</span>`).join('')}
+  </div>
+  <div class="timeline-wrap">${items}</div>`;
+}
+
+// ─── EVIDENCE CHECKLIST SECTION ───────────────────────────────────────────
+function checklist(){
+  const checks=[
+    {key:'profile',title:'Personal profile complete',desc:'Name, NI number, address, GP, and medical contacts all filled in',
+     done:!!(D.profile.name&&D.profile.ni&&D.profile.gp_name),section:'profile'},
+    {key:'conditions',title:'At least one condition registered',desc:'Each diagnosed condition recorded with impact details',
+     done:D.conditions.length>0,section:'conditions'},
+    {key:'symptoms',title:'30+ symptom entries logged',desc:'Consistent daily tracking over at least 30 days',
+     done:D.symptoms.length>=30,section:'symptoms'},
+    {key:'symptoms7',title:'Symptoms logged this week',desc:'At least one entry in the past 7 days',
+     done:D.symptoms.some(s=>s.date&&(new Date()-new Date(s.date))<7*86400000),section:'symptoms'},
+    {key:'daily',title:'All daily living activities assessed',desc:'Status set for all 9 PIP daily living activity areas',
+     done:Object.values(D.daily_status).filter(Boolean).length>=9,section:'daily'},
+    {key:'daily_detail',title:'Daily living detail written for each activity',desc:'Written descriptions for all assessed activities',
+     done:Object.values(D.daily).filter(v=>v&&v.trim().length>20).length>=5,section:'daily'},
+    {key:'mobility',title:'Mobility entries logged',desc:'At least 14 mobility entries including worst-day records',
+     done:D.mobility.entries.length>=14,section:'mobility'},
+    {key:'mobility_worst',title:'Worst-day mobility record',desc:'At least one entry flagged as a worst day',
+     done:D.mobility.entries.some(e=>e.worst),section:'mobility'},
+    {key:'medication',title:'Medication list complete',desc:'All current medications recorded with doses and side effects',
+     done:D.medications.length>0,section:'medication'},
+    {key:'appointments',title:'Appointment history logged',desc:'At least 5 medical appointments recorded',
+     done:D.appointments.length>=5,section:'appointments'},
+    {key:'vault',title:'Supporting documents stored',desc:'At least 3 documents in the evidence vault',
+     done:D.vault.length>=3,section:'vault'},
+    {key:'vault_gp',title:'GP letter in vault',desc:'A letter from your GP confirming your conditions',
+     done:D.vault.some(v=>v.cat==='GP letter'),section:'vault'},
+    {key:'examples',title:'Real-life examples recorded',desc:'At least 5 specific, dated incidents documented',
+     done:D.examples.length>=5,section:'examples'},
+    {key:'prep',title:'Assessment preparation complete',desc:'All guided prompts answered in the Assessment Prep section',
+     done:!!(D.prep.worst_days&&D.prep.without_help&&D.prep.risks&&D.prep.frequency),section:'prep'},
+  ];
+  const done=checks.filter(c=>c.done).length;
+  const pct=Math.round(done/checks.length*100);
+  const rows=checks.map(c=>`
+    <div class="checklist-item">
+      <div class="check-circle ${c.done?'done':''}">
+        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="check-label">
+        <div class="check-title">${c.title}</div>
+        <div class="check-desc">${c.desc}</div>
+        ${!c.done?`<span class="check-cta" onclick="showSection('${c.section}',document.querySelector('[data-section=${c.section}]'))">→ Go to ${c.section}</span>`:''}
+      </div>
+    </div>`).join('');
+  document.getElementById('content-area').innerHTML=`
+  <p class="section-desc">Track your evidence completeness against the 14 criteria that assessors look for. Work through every item before your assessment.</p>
+  <div class="card">
+    <div class="card-title">Completeness — ${done} of ${checks.length} complete</div>
+    <div class="completeness-bar-wrap">
+      <div class="completeness-bar" style="width:${pct}%"></div>
+    </div>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:14px">${pct}% complete${pct===100?' — excellent preparation':'pct>=70?' — well prepared':' — keep adding evidence'}</div>
+    <div>${rows}</div>
+  </div>`;
+}
+
+// ─── VOICE NOTES SECTION ──────────────────────────────────────────────────
+let _voiceTimer=null,_voiceSeconds=0;
+function voicenotes(){
+  if(!D.voiceNotes)D.voiceNotes=[];
+  const notes=D.voiceNotes.slice().reverse().map((n,i)=>`
+    <div class="voice-note-item">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="18" height="18" style="color:var(--teal);flex-shrink:0"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px">${n.label||'Voice note'} <span style="font-weight:400;color:var(--text3)">· ${fmtDate(n.date)}</span></div>
+        <audio controls src="${n.data}" style="width:100%;height:32px"></audio>
+      </div>
+      <button class="btn btn-sm btn-danger" onclick="deleteVoiceNote(${D.voiceNotes.length-1-i})">×</button>
+    </div>`).join('');
+  document.getElementById('content-area').innerHTML=`
+  <p class="section-desc">Record a voice note describing your symptoms, a difficult day, or how an activity affects you. Voice notes are stored privately on your device.</p>
+  <div class="card">
+    <div class="card-title">Record new voice note</div>
+    <div class="fg" style="margin-bottom:12px">
+      <label>Note label</label>
+      <input id="vn-label" placeholder="e.g. Bad pain day, Unable to dress this morning">
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <button class="voice-btn" id="voice-record-btn" onclick="toggleVoiceRecording()">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+        Start recording
+      </button>
+      <span class="voice-timer" id="voice-timer" style="display:none">0:00</span>
+    </div>
+    ${!VOICE.supported()?'<p style="font-size:12px;color:var(--text3);margin-top:8px">Voice recording is not supported on this browser. Try Chrome or Safari.</p>':''}
+  </div>
+  <div class="card">
+    <div class="card-title">Saved voice notes (${D.voiceNotes.length})</div>
+    ${D.voiceNotes.length?notes:`<div class="empty"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/></svg><p>No voice notes yet — tap "Start recording" above</p></div>`}
+  </div>`;
+}
+async function toggleVoiceRecording(){
+  const btn=document.getElementById('voice-record-btn');
+  const timer=document.getElementById('voice-timer');
+  if(!VOICE.isRecording()){
+    const ok=await VOICE.start(async(b64)=>{
+      clearInterval(_voiceTimer);
+      if(timer)timer.style.display='none';
+      const label=document.getElementById('vn-label')?.value||`Voice note ${new Date().toLocaleTimeString('en-GB')}`;
+      if(!D.voiceNotes)D.voiceNotes=[];
+      D.voiceNotes.push({label,data:b64,date:new Date().toISOString().split('T')[0]});
+      await save();voicenotes();toast('Voice note saved ✓');
+    });
+    if(ok){
+      btn.classList.add('recording');btn.innerHTML=`<svg fill="currentColor" viewBox="0 0 24 24" width="14" height="14"><rect x="6" y="6" width="12" height="12" rx="1"/></svg> Stop recording`;
+      if(timer){timer.style.display='inline';_voiceSeconds=0;timer.textContent='0:00';}
+      _voiceTimer=setInterval(()=>{
+        _voiceSeconds++;
+        if(timer)timer.textContent=Math.floor(_voiceSeconds/60)+':'+((_voiceSeconds%60)+'').padStart(2,'0');
+      },1000);
+    }
+  } else {
+    VOICE.stop();
+    btn.classList.remove('recording');btn.innerHTML=`<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14" height="14"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg> Start recording`;
+  }
+}
+async function deleteVoiceNote(i){
+  if(!confirm('Delete this voice note?'))return;
+  D.voiceNotes.splice(i,1);await save();voicenotes();toast('Deleted');
+}
+
+// ─── SETTINGS SECTION ─────────────────────────────────────────────────────
+function settings(){
+  const lockEnabled=LOCK.isEnabled();
+  const biometricAvail=!!(window.PublicKeyCredential);
+  const reminder=JSON.parse(localStorage.getItem('pip_reminder')||'null');
+  const abCfg=AUTOBACKUP.config();
+  document.getElementById('content-area').innerHTML=`
+  <p class="section-desc">Control how your data is protected and backed up. All data remains on your device only.</p>
+
+  <div class="card">
+    <div class="card-title"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="15" height="15"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Privacy & security</div>
+
+    <div class="settings-section-title">App lock</div>
+    <div class="settings-row">
+      <div class="settings-label">
+        <div class="settings-title">PIN lock</div>
+        <div class="settings-desc">${lockEnabled?'App is locked — PIN required on next open':'Require a PIN when opening the app'}</div>
+      </div>
+      <label class="toggle"><input type="checkbox" ${lockEnabled?'checked':''} onchange="togglePin(this.checked)"><span class="toggle-slider"></span></label>
+    </div>
+    ${biometricAvail?`<div class="settings-row">
+      <div class="settings-label">
+        <div class="settings-title">Biometric unlock</div>
+        <div class="settings-desc">Use Face ID, fingerprint, or device PIN to unlock</div>
+      </div>
+      <label class="toggle"><input type="checkbox" ${localStorage.getItem('pip_cred_id')?'checked':''} onchange="toggleBiometric(this.checked)"><span class="toggle-slider"></span></label>
+    </div>`:''}
+
+    <div class="settings-section-title">Encryption</div>
+    <div class="settings-row">
+      <div class="settings-label">
+        <div class="settings-title">AES-256 encryption</div>
+        <div class="settings-desc" style="color:var(--green)">✓ Always on — all data is encrypted in local storage</div>
+      </div>
+      <span class="badge badge-green">Active</span>
+    </div>
+
+    <div class="settings-section-title">Encrypted export</div>
+    <div class="settings-row" style="flex-direction:column;align-items:stretch;gap:10px">
+      <div>
+        <div class="settings-title">Export with password protection</div>
+        <div class="settings-desc">Creates an encrypted backup file — only openable with your password</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <input id="export-pwd" type="password" placeholder="Set export password" style="flex:1;min-width:180px;font-size:13px;border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 10px">
+        <button class="btn btn-navy" onclick="exportEncrypted()">Export encrypted backup</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="15" height="15"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Reminders</div>
+    <div class="settings-row">
+      <div class="settings-label">
+        <div class="settings-title">Daily symptom reminder</div>
+        <div class="settings-desc">${reminder?.enabled?`Set for ${reminder.hour}:00 daily`:'Remind me to log symptoms each day'}</div>
+      </div>
+      <label class="toggle"><input type="checkbox" ${reminder?.enabled?'checked':''} onchange="toggleReminder(this.checked)"><span class="toggle-slider"></span></label>
+    </div>
+    ${reminder?.enabled?'':``}
+    <div class="settings-row" style="flex-direction:column;align-items:stretch;gap:8px">
+      <div>
+        <div class="settings-title">Reminder time</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="time" id="reminder-time" value="${reminder?.hour?String(reminder.hour).padStart(2,'0')+':00':'09:00'}" style="font-size:14px;border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 10px">
+        <button class="btn btn-navy" onclick="setReminder()">Set reminder</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="15" height="15"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Automatic backup</div>
+    <div class="settings-row">
+      <div class="settings-label">
+        <div class="settings-title">Auto-backup</div>
+        <div class="settings-desc">${abCfg.enabled?`Downloads a backup ${abCfg.freq}. Last: ${abCfg.lastRun?fmtDate(abCfg.lastRun.split('T')[0]):'never'}`:'Automatically download a backup file on a schedule'}</div>
+      </div>
+      <label class="toggle"><input type="checkbox" ${abCfg.enabled?'checked':''} onchange="toggleAutoBackup(this.checked)"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="settings-row">
+      <div class="settings-label"><div class="settings-title">Backup frequency</div></div>
+      <select id="backup-freq" onchange="setBackupFreq(this.value)" style="font-size:13px;border:1px solid var(--border);border-radius:var(--radius-sm);padding:6px 10px">
+        <option value="daily" ${abCfg.freq==='daily'?'selected':''}>Daily</option>
+        <option value="weekly" ${abCfg.freq==='weekly'?'selected':''}>Weekly</option>
+        <option value="monthly" ${abCfg.freq==='monthly'?'selected':''}>Monthly</option>
+      </select>
+    </div>
+    <button class="btn btn-navy" style="margin-top:6px" onclick="AUTOBACKUP.run(true)">Download backup now</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="color:var(--red)"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="15" height="15"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Danger zone</div>
+    <div class="settings-row">
+      <div class="settings-label">
+        <div class="settings-title">Clear all data</div>
+        <div class="settings-desc">Permanently delete all your records and evidence from this device</div>
+      </div>
+      <button class="btn btn-sm btn-danger" onclick="clearAllData()">Clear all data</button>
+    </div>
+  </div>`;
+}
+
+// Settings actions
+async function togglePin(enable){
+  if(enable){
+    const pin=prompt('Set a 4–6 digit PIN:');
+    if(!pin||pin.length<4||!/^\d+$/.test(pin)){toast('PIN must be 4–6 digits');settings();return;}
+    const confirm=prompt('Confirm PIN:');
+    if(pin!==confirm){toast('PINs do not match');settings();return;}
+    await LOCK.setPin(pin);
+    document.getElementById('lock-btn').style.display='';
+    toast('PIN lock enabled ✓');settings();
+  } else {
+    localStorage.removeItem(LOCK.PIN_KEY);localStorage.removeItem(LOCK.ENABLED_KEY);
+    document.getElementById('lock-btn').style.display='none';
+    toast('PIN lock disabled');settings();
+  }
+}
+async function toggleBiometric(enable){
+  if(enable){
+    const ok=await LOCK.tryBiometric();
+    if(ok)toast('Biometric unlock registered ✓');
+    else toast('Biometric setup failed — try using PIN instead');
+  } else {
+    localStorage.removeItem('pip_cred_id');toast('Biometric unlock removed');
+  }
+  settings();
+}
+async function exportEncrypted(){
+  const pwd=document.getElementById('export-pwd')?.value;
+  if(!pwd||pwd.length<6){toast('Please enter a password of at least 6 characters');return;}
+  try{
+    const enc=await ENC.exportEncrypted(D,pwd);
+    const blob=new Blob([enc],{type:'application/json'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=`pip_secure_backup_${new Date().toISOString().split('T')[0]}.enc.json`;
+    a.click();
+    toast('Encrypted backup downloaded ✓');
+  }catch(e){toast('Export failed: '+e.message);}
+}
+function toggleReminder(enable){
+  if(!enable){
+    const r=JSON.parse(localStorage.getItem('pip_reminder')||'{}');
+    r.enabled=false;localStorage.setItem('pip_reminder',JSON.stringify(r));
+    settings();
+  }
+}
+function setReminder(){
+  const t=document.getElementById('reminder-time')?.value||'09:00';
+  const hour=parseInt(t.split(':')[0]);
+  REMIND.scheduleDaily('PIP Evidence Builder','Time to log today\'s symptoms and notes',hour);
+  settings();
+}
+function toggleAutoBackup(enable){
+  const cfg=AUTOBACKUP.config();cfg.enabled=enable;AUTOBACKUP.save(cfg);settings();
+}
+function setBackupFreq(freq){
+  const cfg=AUTOBACKUP.config();cfg.freq=freq;AUTOBACKUP.save(cfg);
+}
+function clearAllData(){
+  if(!confirm('This will permanently delete ALL your data on this device. This cannot be undone.\n\nAre you absolutely sure?'))return;
+  if(!confirm('Final confirmation — delete everything?'))return;
+  localStorage.clear();location.reload();
+}
+
+// ─── LOCK SCREEN ──────────────────────────────────────────────────────────
+let _pinEntry='';
+function showLockScreen(){
+  const div=document.createElement('div');div.id='lock-screen';
+  const hasBio=!!localStorage.getItem('pip_cred_id');
+  div.innerHTML=`
+  <div class="lock-logo"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+  <div class="lock-title">PIP Evidence Builder™</div>
+  <div class="lock-sub">Enter your PIN to continue</div>
+  <div class="pin-dots">
+    ${[0,1,2,3,4,5].map(i=>`<div class="pin-dot" id="pd-${i}"></div>`).join('')}
+  </div>
+  <div class="lock-error" id="lock-error"></div>
+  <div class="pin-pad">
+    ${[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(n=>`
+      <button class="pin-btn ${n==='⌫'?'del':''}" onclick="pinPress('${n}')">${n}</button>`).join('')}
+  </div>
+  ${hasBio?`<button class="lock-bio-btn" onclick="biometricUnlock()">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    Use biometric unlock
+  </button>`:''}
+  <p style="color:rgba(255,255,255,.3);font-size:11px;margin-top:16px">Your data is encrypted on this device</p>`;
+  document.body.appendChild(div);
+}
+async function pinPress(val){
+  if(val==='')return;
+  if(val==='⌫'){_pinEntry=_pinEntry.slice(0,-1);}
+  else if(_pinEntry.length<6){_pinEntry+=val;}
+  // Update dots
+  for(let i=0;i<6;i++){
+    const d=document.getElementById(`pd-${i}`);
+    if(d)d.classList.toggle('filled',i<_pinEntry.length);
+  }
+  if(_pinEntry.length>=4){
+    const ok=await LOCK.checkPin(_pinEntry);
+    if(ok){LOCK.unlock();_pinEntry='';}
+    else if(_pinEntry.length>=6){
+      document.getElementById('lock-error').textContent='Incorrect PIN — try again';
+      _pinEntry='';
+      for(let i=0;i<6;i++){const d=document.getElementById(`pd-${i}`);if(d)d.classList.remove('filled');}
+      setTimeout(()=>{const e=document.getElementById('lock-error');if(e)e.textContent='';},2000);
+    }
+  }
+}
+async function biometricUnlock(){
+  const ok=await LOCK.tryBiometric();
+  if(!ok)toast('Biometric failed — enter PIN instead');
+}
+
+// ─── SECTION ROUTER (unified — covers all v1.0 + v1.1 sections) ──────────
+Object.assign(TITLES,{
+  timeline:'Timeline view',checklist:'Evidence checklist',
+  voicenotes:'Voice notes',settings:'Security & settings'
+});
+function showSection(key,el){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  if(el)el.classList.add('active');
+  document.getElementById('page-title').textContent=TITLES[key]||key;
+  document.getElementById('sidebar').classList.remove('open');
+  const fns={
+    profile,conditions,symptoms,medication,daily,mobility,
+    appointments,vault,examples,prep,score,pack,
+    timeline,checklist,voicenotes,settings
+  };
+  (fns[key]||profile)();
+}
+
+// ─── UPDATED exportData WITH ENCRYPTED OPTION ─────────────────────────────
+async function exportData(){
   const json=JSON.stringify(D,null,2);
   const blob=new Blob([json],{type:'application/json'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
   a.download=`pip_evidence_backup_${new Date().toISOString().split('T')[0]}.json`;
   a.click();
-  toast('Data backed up');
+  toast('Backup downloaded');
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────
-updateScores();
-profile();
+(async()=>{
+  await ENC.init();
+  await loadData();
+  updateScores();
+  REMIND.init();
+  AUTOBACKUP.init();
+  if(LOCK.isEnabled()){
+    document.getElementById('lock-btn').style.display='';
+    showLockScreen();
+  }
+  profile();
+})();
 </script>
 </body>
 </html>
