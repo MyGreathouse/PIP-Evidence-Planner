@@ -1973,7 +1973,22 @@ function pack(){
         Back up all data (JSON)
       </button>
     </div>
-    <p style="font-size:11px;color:var(--text3);margin-top:10px">Use your browser's print function to save as PDF. Select "Save as PDF" from the destination dropdown.</p>
+    <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+      <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:4px"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Export password-protected PDF
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <input type="password" id="pdf-export-pwd" placeholder="Set a password for this PDF"
+          style="flex:1;min-width:180px;font-size:13px;border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 10px;font-family:inherit">
+        <button class="btn btn-navy" onclick="exportPasswordPDF()" id="pdf-export-btn">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Export PDF
+        </button>
+      </div>
+      <p style="font-size:11px;color:var(--text3);margin-top:6px">Password is used only to protect the PDF file — it is never stored anywhere.</p>
+    </div>
+    <p style="font-size:11px;color:var(--text3);margin-top:10px">To print without a password: click "Print full evidence pack" above and select "Save as PDF" from your browser's print dialogue.</p>
   </div>
   <div class="disclaimer">⚠ All exports include this disclaimer. PIP Evidence Builder™ does not guarantee any outcome, predict award decisions, or provide legal or welfare rights advice. This pack is an evidence organisation tool only. All content must be reviewed by the claimant before submission. Reports are for personal record-keeping and should not be submitted as official documents without independent review.</div>`;
 }
@@ -2064,7 +2079,359 @@ function printPack(){
   w.document.close();setTimeout(()=>w.print(),600);
 }
 
-// ─── TIMELINE SECTION ─────────────────────────────────────────────────────
+// ─── PASSWORD-PROTECTED PDF EXPORT ────────────────────────────────────────
+// Uses jsPDF (lazy-loaded from cdnjs). Password is never stored.
+// Falls back to printPack() if jsPDF cannot load (e.g. offline).
+async function exportPasswordPDF(){
+  var pwd = document.getElementById('pdf-export-pwd');
+  var password = pwd ? pwd.value.trim() : '';
+  if(!password){
+    toast('Please enter a password for the PDF');
+    if(pwd) pwd.focus();
+    return;
+  }
+  if(password.length < 4){
+    toast('Password must be at least 4 characters');
+    return;
+  }
+
+  var btn = document.getElementById('pdf-export-btn');
+  if(btn){ btn.disabled = true; btn.textContent = 'Generating…'; }
+
+  try {
+    // Lazy-load jsPDF from cdnjs (only loads once per session)
+    if(!window.jspdf){
+      await new Promise(function(resolve, reject){
+        var s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+        s.onload = resolve;
+        s.onerror = reject;
+        document.head.appendChild(s);
+      });
+    }
+
+    var jsPDF = window.jspdf.jsPDF;
+    var p = D.profile;
+    var scores = calcScores();
+
+    // Initialise document — A4, portrait
+    var doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4',
+      encryption: {
+        userPassword: password,
+        ownerPassword: password + '_owner',
+        userPermissions: ['print', 'copy']
+      }
+    });
+
+    var pageW = doc.internal.pageSize.getWidth();
+    var margin = 18;
+    var contentW = pageW - margin * 2;
+    var y = 0;
+
+    function checkPage(needed){
+      if(needed === undefined) needed = 12;
+      if(y + needed > 270){ doc.addPage(); y = 20; }
+    }
+
+    function heading1(text){
+      checkPage(20);
+      doc.setFillColor(13, 43, 78);
+      doc.rect(margin, y, contentW, 12, 'F');
+      doc.setTextColor(255,255,255);
+      doc.setFontSize(13); doc.setFont('helvetica','bold');
+      doc.text(text, margin+4, y+8);
+      doc.setTextColor(26,26,26);
+      y += 16;
+    }
+
+    function heading2(text){
+      checkPage(12);
+      doc.setFontSize(11); doc.setFont('helvetica','bold');
+      doc.setTextColor(13,43,78);
+      doc.text(text, margin, y);
+      doc.setDrawColor(13,43,78);
+      doc.line(margin, y+1.5, margin+contentW, y+1.5);
+      doc.setTextColor(26,26,26);
+      y += 8;
+    }
+
+    function bodyText(text, indent){
+      if(indent === undefined) indent = 0;
+      checkPage(8);
+      doc.setFontSize(9.5); doc.setFont('helvetica','normal');
+      doc.setTextColor(40,40,40);
+      var lines = doc.splitTextToSize(text || '—', contentW - indent);
+      doc.text(lines, margin + indent, y);
+      y += lines.length * 5 + 2;
+    }
+
+    function tableRow(label, value, shade){
+      checkPage(7);
+      if(shade){
+        doc.setFillColor(245,245,242);
+        doc.rect(margin, y-3.5, contentW, 7, 'F');
+      }
+      doc.setFontSize(9); doc.setFont('helvetica','bold');
+      doc.setTextColor(80,80,80);
+      doc.text(label, margin+2, y);
+      doc.setFont('helvetica','normal');
+      doc.setTextColor(26,26,26);
+      var val = doc.splitTextToSize(String(value||'—'), contentW-52);
+      doc.text(val, margin+52, y);
+      y += Math.max(val.length * 4.5, 6) + 1;
+    }
+
+    // ── Cover page ──────────────────────────────────────────────────────
+    doc.setFillColor(13,43,78);
+    doc.rect(0,0,pageW,50,'F');
+    doc.setTextColor(255,255,255);
+    doc.setFontSize(9); doc.setFont('helvetica','normal');
+    doc.text('PIP EVIDENCE BUILDER™  ·  YOURUKHELPDESK', margin, 18);
+    doc.setFontSize(20); doc.setFont('helvetica','bold');
+    doc.text('Personal Independence Payment', margin, 30);
+    doc.text('Evidence Pack', margin, 40);
+
+    doc.setFillColor(26,138,122);
+    doc.rect(0,50,pageW,1,'F');
+
+    y = 62;
+    doc.setTextColor(26,26,26);
+    doc.setFontSize(14); doc.setFont('helvetica','bold');
+    doc.text(p.name || '[Claimant name not provided]', margin, y); y += 9;
+    doc.setFontSize(9); doc.setFont('helvetica','normal');
+    doc.setTextColor(100,100,100);
+    doc.text('Generated: ' + new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}), margin, y); y += 6;
+    if(p.ni) doc.text('National Insurance: ' + p.ni, margin, y);
+    y += 14;
+
+    // Score boxes
+    doc.setDrawColor(13,43,78);
+    doc.roundedRect(margin, y, contentW/2-4, 20, 2, 2);
+    doc.setFontSize(18); doc.setFont('helvetica','bold'); doc.setTextColor(26,138,122);
+    doc.text(String(scores.prep), margin+8, y+13);
+    doc.setFontSize(8); doc.setFont('helvetica','normal'); doc.setTextColor(100,100,100);
+    doc.text('Preparation score / 100', margin+20, y+8);
+    doc.text(prepClass(scores.prep), margin+20, y+14);
+
+    doc.roundedRect(margin+contentW/2+4, y, contentW/2-4, 20, 2, 2);
+    doc.setFontSize(18); doc.setFont('helvetica','bold'); doc.setTextColor(13,43,78);
+    doc.text(String(scores.evid), margin+contentW/2+12, y+13);
+    doc.setFontSize(8); doc.setFont('helvetica','normal'); doc.setTextColor(100,100,100);
+    doc.text('Evidence strength / 100', margin+contentW/2+24, y+8);
+    doc.text(evidClass(scores.evid), margin+contentW/2+24, y+14);
+    y += 28;
+
+    // Disclaimer on cover
+    doc.setFillColor(245,244,240);
+    doc.rect(margin, y, contentW, 18, 'F');
+    doc.setFontSize(7.5); doc.setFont('helvetica','normal'); doc.setTextColor(120,120,120);
+    var disc = 'This pack is produced by PIP Evidence Builder™, an evidence organisation tool only. It does not constitute legal or welfare rights advice, predict award outcomes, or determine eligibility for PIP or any other benefit. All content must be reviewed by the claimant before use.';
+    var discLines = doc.splitTextToSize(disc, contentW-4);
+    doc.text(discLines, margin+2, y+5);
+    y += 24;
+
+    // ── Claimant summary ────────────────────────────────────────────────
+    heading1('Claimant Summary');
+    var shade = false;
+    var summary = [
+      ['Full name', p.name], ['Date of birth', p.dob], ['Address', p.address],
+      ['NI number', p.ni], ['Phone', p.phone], ['Email', p.email],
+      ['GP', (p.gp_name||'') + (p.gp_surgery?' — '+p.gp_surgery:'')],
+      ['Specialist', p.specialist], ['Care coordinator', p.care_coord],
+    ];
+    summary.forEach(function(r){ tableRow(r[0], r[1], shade); shade=!shade; });
+    y += 4;
+
+    // ── Health conditions ────────────────────────────────────────────────
+    if(D.conditions.length > 0){
+      heading1('Health Conditions (' + D.conditions.length + ')');
+      D.conditions.forEach(function(cond){
+        heading2(cond.name);
+        tableRow('Diagnosed', cond.date, false);
+        tableRow('Diagnosed by', cond.by, true);
+        tableRow('Status', cond.status, false);
+        tableRow('Treatment', cond.med, true);
+        if(cond.impact){ bodyText('Daily life impact: ' + cond.impact, 0); }
+        if(cond.mob){ bodyText('Mobility impact: ' + cond.mob, 0); }
+        y += 3;
+      });
+    }
+
+    // ── Symptom overview ────────────────────────────────────────────────
+    if(D.symptoms.length > 0){
+      heading1('Symptom Log (' + D.symptoms.length + ' entries)');
+      // Show most recent 20
+      var shown = D.symptoms.slice(-20).reverse();
+      shown.forEach(function(s, idx){
+        checkPage(8);
+        doc.setFontSize(9); doc.setFont('helvetica','normal');
+        doc.setFillColor(idx%2===0?249:255, idx%2===0?249:255, idx%2===0?242:255);
+        doc.rect(margin, y-3.5, contentW, 7, 'F');
+        doc.setTextColor(100,100,100);
+        doc.text(fmtDate(s.date), margin+2, y);
+        doc.setTextColor(26,26,26);
+        doc.text((s.name||'').substring(0,40), margin+32, y);
+        doc.setTextColor(26,138,122);
+        doc.text('Severity: '+s.sev+'/10', margin+130, y);
+        doc.setTextColor(26,26,26);
+        y += 6;
+      });
+      if(D.symptoms.length > 20){
+        doc.setFontSize(8); doc.setTextColor(120,120,120);
+        doc.text('Showing most recent 20 of ' + D.symptoms.length + ' entries.', margin, y);
+        y += 6;
+      }
+      y += 4;
+    }
+
+    // ── Daily living ─────────────────────────────────────────────────────
+    var dailyEntries = Object.keys(D.daily).filter(function(k){ return D.daily[k] && D.daily[k].trim(); });
+    if(dailyEntries.length > 0){
+      heading1('Daily Living Difficulties');
+      var actLabels = {
+        preparing_food:'Preparing food', eating:'Eating and drinking',
+        medication:'Managing medication', washing:'Washing and bathing',
+        dressing:'Dressing', communicating:'Communicating',
+        reading:'Reading', mixing:'Mixing with others', budgeting:'Budgeting'
+      };
+      dailyEntries.forEach(function(k, idx){
+        heading2(actLabels[k] || k);
+        var status = D.daily_status[k] || '';
+        var stLabel = status==='diff'?'Cannot do unaided':status==='asst'?'Needs assistance':status==='fine'?'Managed independently':'Not recorded';
+        tableRow('Status', stLabel, false);
+        bodyText(D.daily[k], 0);
+        y += 2;
+      });
+    }
+
+    // ── Mobility ─────────────────────────────────────────────────────────
+    if(D.mobility.entries.length > 0){
+      heading1('Mobility Log (' + D.mobility.entries.length + ' entries)');
+      D.mobility.entries.slice(-15).reverse().forEach(function(e, idx){
+        checkPage(8);
+        doc.setFillColor(idx%2===0?249:255, idx%2===0?249:255, idx%2===0?242:255);
+        doc.rect(margin, y-3.5, contentW, 7, 'F');
+        doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(26,26,26);
+        doc.text(fmtDate(e.date) + (e.worst?' ★':''), margin+2, y);
+        doc.text('Dist: '+(e.dist||'—'), margin+38, y);
+        doc.text('Pain: '+e.pain+'/10', margin+75, y);
+        doc.text('Fatigue: '+e.fatigue+'/10', margin+100, y);
+        doc.text('Aids: '+(e.aids||'—'), margin+135, y);
+        y += 6;
+      });
+      y += 4;
+    }
+
+    // ── Medication ───────────────────────────────────────────────────────
+    if(D.medications.length > 0){
+      heading1('Medication Summary');
+      D.medications.forEach(function(m, idx){
+        checkPage(8);
+        doc.setFillColor(idx%2===0?249:255, idx%2===0?249:255, idx%2===0?242:255);
+        doc.rect(margin, y-3.5, contentW, 7, 'F');
+        doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(26,26,26);
+        doc.text((m.name||'').substring(0,30), margin+2, y);
+        doc.setFont('helvetica','normal');
+        doc.text(m.dose||'—', margin+70, y);
+        doc.text(m.purp||'—', margin+110, y);
+        y += 6;
+      });
+      y += 4;
+    }
+
+    // ── Appointments ─────────────────────────────────────────────────────
+    if(D.appointments.length > 0){
+      heading1('Appointment History (' + D.appointments.length + ')');
+      D.appointments.slice(-15).reverse().forEach(function(a, idx){
+        checkPage(8);
+        doc.setFillColor(idx%2===0?249:255, idx%2===0?249:255, idx%2===0?242:255);
+        doc.rect(margin, y-3.5, contentW, 7, 'F');
+        doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(26,26,26);
+        doc.text(fmtDate(a.date), margin+2, y);
+        doc.text((a.type||'').substring(0,18), margin+32, y);
+        doc.text((a.prov||'—').substring(0,30), margin+72, y);
+        y += 6;
+      });
+      y += 4;
+    }
+
+    // ── Real-life examples ───────────────────────────────────────────────
+    if(D.examples.length > 0){
+      heading1('Real-Life Examples (' + D.examples.length + ')');
+      D.examples.forEach(function(e){
+        heading2(e.act + ' — ' + fmtDate(e.date));
+        bodyText(e.what || '', 0);
+        if(e.help){ bodyText('Assistance needed: ' + e.help, 0); }
+        if(e.cons){ bodyText('Consequences: ' + e.cons, 0); }
+        y += 3;
+      });
+    }
+
+    // ── Assessment prep ──────────────────────────────────────────────────
+    var prepFilled = D.prep.worst_days || D.prep.without_help || D.prep.risks || D.prep.frequency;
+    if(prepFilled){
+      heading1('Assessment Preparation Notes');
+      if(D.prep.worst_days){ heading2('Worst days'); bodyText(D.prep.worst_days); y+=2; }
+      if(D.prep.without_help){ heading2('Without assistance'); bodyText(D.prep.without_help); y+=2; }
+      if(D.prep.risks){ heading2('Risks'); bodyText(D.prep.risks); y+=2; }
+      if(D.prep.frequency){ heading2('Frequency'); bodyText(D.prep.frequency); y+=2; }
+    }
+
+    // ── Document vault index ─────────────────────────────────────────────
+    if(D.vault.length > 0){
+      heading1('Supporting Evidence Index (' + D.vault.length + ' documents)');
+      D.vault.forEach(function(v, idx){
+        checkPage(8);
+        doc.setFillColor(idx%2===0?249:255, idx%2===0?249:255, idx%2===0?242:255);
+        doc.rect(margin, y-3.5, contentW, 7, 'F');
+        doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(26,26,26);
+        doc.text((v.name||'').substring(0,50), margin+2, y);
+        doc.setFont('helvetica','normal'); doc.setTextColor(100,100,100);
+        doc.text(v.cat||'', margin+130, y);
+        y += 6;
+      });
+      y += 4;
+    }
+
+    // ── Final disclaimer ─────────────────────────────────────────────────
+    checkPage(20);
+    doc.setFillColor(245,244,240);
+    doc.rect(margin, y, contentW, 18, 'F');
+    doc.setFontSize(7.5); doc.setFont('helvetica','normal'); doc.setTextColor(120,120,120);
+    var finalDisc = '⚠ PIP Evidence Builder™ — Evidence organisation tool only. This pack does not constitute legal advice, predict award outcomes, or determine eligibility for any benefit. Generated: ' + new Date().toLocaleDateString('en-GB') + '. Produced by YourUKHelpDesk / Alexander Hart.';
+    doc.text(doc.splitTextToSize(finalDisc, contentW-4), margin+2, y+5);
+
+    // ── Page numbers ─────────────────────────────────────────────────────
+    var total = doc.internal.getNumberOfPages();
+    for(var i=1; i<=total; i++){
+      doc.setPage(i);
+      doc.setFontSize(8); doc.setFont('helvetica','normal'); doc.setTextColor(160,160,160);
+      doc.text('Page ' + i + ' of ' + total + '  ·  PIP Evidence Builder™  ·  Confidential', margin, 290);
+    }
+
+    // ── Save ─────────────────────────────────────────────────────────────
+    var filename = 'PIP_Evidence_Pack_' + new Date().toISOString().split('T')[0] + '.pdf';
+    doc.save(filename);
+    toast('Password-protected PDF downloaded ✓');
+
+  } catch(err) {
+    console.error('PIP exportPasswordPDF error:', err);
+    if(err && err.message && err.message.indexOf('Failed to fetch') !== -1){
+      toast('Could not load PDF library — are you offline? Using browser print instead.');
+      printPack();
+    } else {
+      toast('PDF export failed: ' + (err ? err.message : 'unknown error'));
+    }
+  } finally {
+    var btn = document.getElementById('pdf-export-btn');
+    if(btn){ btn.disabled = false; btn.innerHTML = '<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Export PDF'; }
+    // Never retain the password
+    var pwd = document.getElementById('pdf-export-pwd');
+    if(pwd) pwd.value = '';
+  }
+}
+
+
 function timeline(){
   // Gather all dated events into one stream
   const events=[];
