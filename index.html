@@ -2345,19 +2345,15 @@ function printPack(){
       + impactHtml + mobHtml;
   }).join(''):'<p>No conditions recorded.</p>'}
   <h2>Symptom log (${D.symptoms.length} entries)</h2>
-  ${D.symptoms.length?`<table><tr><th>Date</th><th>Symptom</th><th>Severity</th><th>Effect on activities</th></tr>
-  ${D.symptoms.map(s=>`<tr><td>${fmtDate(s.date)}</td><td>${s.name}</td><td>${s.sev}/10</td><td>${s.effect||'—'}</td></tr>`).join('')}</table>`:'<p>No symptom entries recorded.</p>'}
+  ${D.symptoms.length ? '<table><tr><th>Date</th><th>Symptom</th><th>Severity</th><th>Effect on activities</th></tr>' + D.symptoms.map(function(s){return '<tr><td>'+fmtDate(s.date)+'</td><td>'+s.name+'</td><td>'+s.sev+'/10</td><td>'+(s.effect||'—')+'</td></tr>';}).join('') + '</table>' : '<p>No symptom entries recorded.</p>'}
   <h2>Daily living difficulties</h2>
   ${ACTS.map(function(a){return D.daily[a.id] ? '<h3>'+a.label+'</h3><p>'+D.daily[a.id]+'</p>' : '';}).filter(Boolean).join('')||'<p>No daily living entries recorded.</p>'}
   <h2>Mobility log (${D.mobility.entries.length} entries)</h2>
-  ${D.mobility.entries.length?`<table><tr><th>Date</th><th>Distance</th><th>Pain</th><th>Fatigue</th><th>Aids</th><th>Falls</th></tr>
-  ${D.mobility.entries.map(e=>`<tr><td>${fmtDate(e.date)}${e.worst?' ★':''}</td><td>${e.dist||'—'}</td><td>${e.pain}/10</td><td>${e.fatigue}/10</td><td>${e.aids||'—'}</td><td>${e.falls}</td></tr>`).join('')}</table>`:'<p>No mobility entries recorded.</p>'}
+  ${D.mobility.entries.length ? '<table><tr><th>Date</th><th>Distance</th><th>Pain</th><th>Fatigue</th><th>Aids</th><th>Falls</th></tr>' + D.mobility.entries.map(function(e){return '<tr><td>'+fmtDate(e.date)+(e.worst?' ★':'')+'</td><td>'+(e.dist||'—')+'</td><td>'+e.pain+'/10</td><td>'+e.fatigue+'/10</td><td>'+(e.aids||'—')+'</td><td>'+e.falls+'</td></tr>';}).join('') + '</table>' : '<p>No mobility entries recorded.</p>'}
   <h2>Medication summary (${D.medications.length})</h2>
-  ${D.medications.length?`<table><tr><th>Medication</th><th>Dose</th><th>Purpose</th><th>Prescriber</th></tr>
-  ${D.medications.map(m=>`<tr><td>${m.name}</td><td>${m.dose||'—'}</td><td>${m.purp||'—'}</td><td>${m.by||'—'}</td></tr>`).join('')}</table>`:'<p>No medications recorded.</p>'}
+  ${D.medications.length ? '<table><tr><th>Medication</th><th>Dose</th><th>Purpose</th><th>Prescriber</th></tr>' + D.medications.map(function(m){return '<tr><td>'+m.name+'</td><td>'+(m.dose||'—')+'</td><td>'+(m.purp||'—')+'</td><td>'+(m.by||'—')+'</td></tr>';}).join('') + '</table>' : '<p>No medications recorded.</p>'}
   <h2>Appointment history (${D.appointments.length})</h2>
-  ${D.appointments.length?`<table><tr><th>Date</th><th>Type</th><th>Provider</th><th>Outcome</th></tr>
-  ${D.appointments.map(a=>`<tr><td>${fmtDate(a.date)}</td><td>${a.type}</td><td>${a.prov||'—'}</td><td>${a.outcome||'—'}</td></tr>`).join('')}</table>`:'<p>No appointments logged.</p>'}
+  ${D.appointments.length ? '<table><tr><th>Date</th><th>Type</th><th>Provider</th><th>Outcome</th></tr>' + D.appointments.map(function(a){return '<tr><td>'+fmtDate(a.date)+'</td><td>'+a.type+'</td><td>'+(a.prov||'—')+'</td><td>'+(a.outcome||'—')+'</td></tr>';}).join('') + '</table>' : '<p>No appointments logged.</p>'}
   <h2>Real-life examples (${D.examples.length})</h2>
   ${D.examples.length?D.examples.map(function(e){
     var helpHtml = e.help ? '<p><strong>Assistance needed:</strong> ' + e.help + '</p>' : '';
@@ -2373,8 +2369,7 @@ function printPack(){
   ${D.prep.frequency ? '<h3>Frequency</h3><p>'+D.prep.frequency+'</p>' : ''}
   ${D.prep.additional ? '<h3>Additional notes</h3><p>'+D.prep.additional+'</p>' : ''}
   <h2>Supporting evidence index (${D.vault.length} documents)</h2>
-  ${D.vault.length?`<table><tr><th>Document</th><th>Category</th><th>Notes</th></tr>
-  ${D.vault.map(v=>`<tr><td>${v.name}</td><td>${v.cat}</td><td>${v.notes||'—'}</td></tr>`).join('')}</table>`:'<p>No supporting documents logged.</p>'}
+  ${D.vault.length ? '<table><tr><th>Document</th><th>Category</th><th>Notes</th></tr>' + D.vault.map(function(v){return '<tr><td>'+v.name+'</td><td>'+v.cat+'</td><td>'+(v.notes||'—')+'</td></tr>';}).join('') + '</table>' : '<p>No supporting documents logged.</p>'}
   <div class="disclaimer" style="margin-top:40px">⚠ PIP Evidence Builder™ — Evidence organisation tool only. This pack does not constitute legal advice, predict award outcomes, or determine eligibility for any benefit. Generated: ${new Date().toLocaleDateString('en-GB')}. Produced by YourUKHelpDesk / Alexander Hart.</div>
   </div></body></html>`);
   w.document.close();setTimeout(()=>w.print(),600);
@@ -2810,17 +2805,18 @@ function checklist(){
   ];
   const done=checks.filter(c=>c.done).length;
   const pct=Math.round(done/checks.length*100);
-  const rows=checks.map(c=>`
-    <div class="checklist-item">
-      <div class="check-circle ${c.done?'done':''}">
-        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-      </div>
-      <div class="check-label">
-        <div class="check-title">${c.title}</div>
-        <div class="check-desc">${c.desc}</div>
-        ${!c.done ? '<span class="check-cta" onclick="showSection(\'' + c.section + '\',document.querySelector(\'[data-section=' + c.section + ']\'))">→ Go to ' + c.section + '</span>' : ''}
-      </div>
-    </div>`).join('');
+  const rows=checks.map(function(c){
+    var circleCls = c.done ? 'check-circle done' : 'check-circle';
+    var ctaHtml   = c.done ? '' : '<span class="check-cta" onclick="showSection(\''+c.section+'\',document.querySelector(\'[data-section='+c.section+']\'))">Go to '+c.section+'</span>';
+    return '<div class="checklist-item">'
+      + '<div class="'+circleCls+'"><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>'
+      + '<div class="check-label">'
+      + '<div class="check-title">'+c.title+'</div>'
+      + '<div class="check-desc">'+c.desc+'</div>'
+      + ctaHtml
+      + '</div>'
+      + '</div>';
+  }).join('');
   document.getElementById('content-area').innerHTML=`
   <p class="section-desc">Track your evidence completeness against the 14 criteria that assessors look for. Work through every item before your assessment.</p>
   <div class="card">
