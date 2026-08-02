@@ -1588,7 +1588,7 @@ function symptoms(){
   </div>
   <div class="card">
     <div class="card-title">Recent entries (${D.symptoms.length} total)</div>
-    ${D.symptoms.length?rows:`<div class="empty"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><p>No symptom entries yet — start logging daily</p></div>`}
+    ${D.symptoms.length ? rows : '<div class="empty"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><p>No symptom entries yet — start logging daily</p></div>'}
   </div>`;
 }
 function saveSymptom(){
@@ -1622,7 +1622,7 @@ function medication(){
   <p class="section-desc">Track all current medications. Your list appears in exported reports as evidence of ongoing treatment.</p>
   <div class="card">
     <div class="card-title">Current medications (${D.medications.length})</div>
-    ${D.medications.length?rows:`<div class="empty"><p>No medications recorded yet</p></div>`}
+    ${D.medications.length ? rows : '<div class="empty"><p>No medications recorded yet</p></div>'}
     <button class="btn btn-navy" style="margin-top:10px" onclick="openModal('modal-medication')">+ Add medication</button>
   </div>`;
 }
@@ -1750,7 +1750,7 @@ function mobility(){
   </div>
   <div class="card">
     <div class="card-title">Mobility log (${D.mobility.entries.length} entries)</div>
-    ${D.mobility.entries.length?rows:`<div class="empty"><p>No mobility entries yet</p></div>`}
+    ${D.mobility.entries.length ? rows : '<div class="empty"><p>No mobility entries yet</p></div>'}
   </div>`;
 }
 function saveMobility(worst){
@@ -1791,7 +1791,7 @@ function appointments(){
   <p class="section-desc">Every appointment is evidence of ongoing treatment and medical need. Log them all, including phone and video consultations.</p>
   <div class="card">
     <div class="card-title">Appointment log (${D.appointments.length})</div>
-    ${D.appointments.length?rows:`<div class="empty"><p>No appointments logged yet</p></div>`}
+    ${D.appointments.length ? rows : '<div class="empty"><p>No appointments logged yet</p></div>'}
     <button class="btn btn-navy" style="margin-top:10px" onclick="openModal('modal-appointment')">+ Add appointment</button>
   </div>`;
 }
@@ -1886,7 +1886,7 @@ function vault(){
     <div class="card-title">Name and categorise this document</div>
     <div class="form-grid">
       <div class="fg"><label>Document name *</label><input id="vlt-name" placeholder="e.g. GP letter June 2026"></div>
-      <div class="fg"><label>Category</label><select id="vlt-cat">${VAULT_CATS.map(c=>`<option>${c}</option>`).join('')}</select></div>
+      <div class="fg"><label>Category</label><select id="vlt-cat">${VAULT_CATS.map(function(vc){return '<option>'+vc+'</option>';}).join('')}</select></div>
     </div>
     <div class="fg" style="margin-bottom:12px"><label>Notes (optional)</label>
       <textarea id="vlt-notes" rows="2" placeholder="Key information contained in this document"></textarea>
@@ -2095,7 +2095,7 @@ function examples(){
   <p class="section-desc">Specific, dated real-life examples are among the most persuasive evidence you can provide. Record incidents as they happen.</p>
   <div class="card">
     <div class="card-title">Real-life examples (${D.examples.length})</div>
-    ${D.examples.length?rows:`<div class="empty"><p>No examples recorded yet — start logging incidents when they happen</p></div>`}
+    ${D.examples.length ? rows : '<div class="empty"><p>No examples recorded yet — start logging incidents when they happen</p></div>'}
     <button class="btn btn-navy" style="margin-top:10px" onclick="openModal('modal-example')">+ Add example</button>
   </div>`;
 }
@@ -2186,12 +2186,13 @@ function score(){
   </div>
   <div class="card">
     <div class="card-title">Score breakdown</div>
-    ${factors.map(f=>`
-    <div class="factor-row">
-      <span class="factor-label">${f.label}</span>
-      <div class="factor-bar-bg"><div class="factor-bar-fg" style="width:${f.pct}%"></div></div>
-      <span class="factor-pct">${f.pct}%</span>
-    </div>`).join('')}
+    ${factors.map(function(f){
+    return '<div class="factor-row">'
+      + '<span class="factor-label">' + f.label + '</span>'
+      + '<div class="factor-bar-bg"><div class="factor-bar-fg" style="width:' + f.pct + '%"></div></div>'
+      + '<span class="factor-pct">' + f.pct + '%</span>'
+      + '</div>';
+  }).join('')}
   </div>
   <div class="card">
     <div class="card-title">Observations</div>
@@ -2223,15 +2224,15 @@ function buildInsights(){
 function pack(){
   const checks=[
     {label:'Cover page',ready:true,note:''},
-    {label:'Claimant summary',ready:!!D.profile.name,note:D.profile.name?'':`Complete your profile first`},
-    {label:'Medical conditions summary',ready:D.conditions.length>0,note:D.conditions.length?`${D.conditions.length} condition${D.conditions.length>1?'s':''}`:'No conditions recorded'},
-    {label:'Symptom overview',ready:D.symptoms.length>0,note:D.symptoms.length?`${D.symptoms.length} entries`:'No symptoms logged'},
+    {label:'Claimant summary',ready:!!D.profile.name,note:D.profile.name?'':'Complete your profile first'},
+    {label:'Medical conditions summary',ready:D.conditions.length>0,note:D.conditions.length ? D.conditions.length + ' condition' + (D.conditions.length>1?'s':'') : 'No conditions recorded'},
+    {label:'Symptom overview',ready:D.symptoms.length>0,note:D.symptoms.length ? D.symptoms.length + ' entries' : 'No symptoms logged'},
     {label:'Daily living difficulties summary',ready:Object.values(D.daily).some(v=>v&&v.trim()),note:''},
-    {label:'Mobility difficulties summary',ready:D.mobility.entries.length>0,note:D.mobility.entries.length?`${D.mobility.entries.length} entries`:'No mobility entries'},
-    {label:'Medication summary',ready:D.medications.length>0,note:D.medications.length?`${D.medications.length} medication${D.medications.length>1?'s':''}`:'No medications recorded'},
-    {label:'Appointment history',ready:D.appointments.length>0,note:D.appointments.length?`${D.appointments.length} appointment${D.appointments.length>1?'s':''}`:'No appointments logged'},
-    {label:'Real-life examples',ready:D.examples.length>0,note:D.examples.length?`${D.examples.length} example${D.examples.length>1?'s':''}`:'No examples added yet'},
-    {label:'Supporting evidence index',ready:D.vault.length>0,note:D.vault.length?`${D.vault.length} document${D.vault.length>1?'s':''}`:'No documents logged'},
+    {label:'Mobility difficulties summary',ready:D.mobility.entries.length>0,note:D.mobility.entries.length ? D.mobility.entries.length + ' entries' : 'No mobility entries'},
+    {label:'Medication summary',ready:D.medications.length>0,note:D.medications.length ? D.medications.length + ' medication' + (D.medications.length>1?'s':'') : 'No medications recorded'},
+    {label:'Appointment history',ready:D.appointments.length>0,note:D.appointments.length ? D.appointments.length + ' appointment' + (D.appointments.length>1?'s':'') : 'No appointments logged'},
+    {label:'Real-life examples',ready:D.examples.length>0,note:D.examples.length ? D.examples.length + ' example' + (D.examples.length>1?'s':'') : 'No examples added yet'},
+    {label:'Supporting evidence index',ready:D.vault.length>0,note:D.vault.length ? D.vault.length + ' document' + (D.vault.length>1?'s':'') : 'No documents logged'},
     {label:'Assessment preparation notes',ready:!!(D.prep.worst_days||D.prep.without_help),note:''},
     {label:'Disclaimer',ready:true,note:'Included on all exports'},
   ];
@@ -2240,15 +2241,19 @@ function pack(){
   <p class="section-desc">Generate a professionally structured evidence pack from all your recorded data. Print or save for your records.</p>
   <div class="card">
     <div class="card-title">Evidence pack contents (${readyCount} of ${checks.length} sections ready)</div>
-    ${checks.map(c=>`
-    <div class="pack-item">
-      <svg width="15" height="15" fill="none" stroke="${c.ready?'var(--green)':'var(--amber)'}" stroke-width="2.5" viewBox="0 0 24 24">
-        ${c.ready?'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>'
-        :'<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'}
-      </svg>
-      <span class="pack-item-label">${c.label}</span>
-      <span class="${c.ready?'badge badge-green':'badge badge-amber'}">${c.note||(c.ready?'Ready':'Incomplete')}</span>
-    </div>`).join('')}
+    ${checks.map(function(c){
+    var svg_icon = c.ready
+      ? '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>'
+      : '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>';
+    var stroke_col = c.ready ? 'var(--green)' : 'var(--amber)';
+    var badge_cls  = c.ready ? 'badge badge-green' : 'badge badge-amber';
+    var note_text  = c.note || (c.ready ? 'Ready' : 'Incomplete');
+    return '<div class="pack-item">'
+      + '<svg width="15" height="15" fill="none" stroke="' + stroke_col + '" stroke-width="2.5" viewBox="0 0 24 24">' + svg_icon + '</svg>'
+      + '<span class="pack-item-label">' + c.label + '</span>'
+      + '<span class="' + badge_cls + '">' + note_text + '</span>'
+      + '</div>';
+  }).join('')}
   </div>
   <div class="card">
     <div class="card-title">Export options</div>
@@ -2343,7 +2348,7 @@ function printPack(){
   ${D.symptoms.length?`<table><tr><th>Date</th><th>Symptom</th><th>Severity</th><th>Effect on activities</th></tr>
   ${D.symptoms.map(s=>`<tr><td>${fmtDate(s.date)}</td><td>${s.name}</td><td>${s.sev}/10</td><td>${s.effect||'—'}</td></tr>`).join('')}</table>`:'<p>No symptom entries recorded.</p>'}
   <h2>Daily living difficulties</h2>
-  ${ACTS.map(a=>D.daily[a.id]?`<h3>${a.label}</h3><p>${D.daily[a.id]}</p>`:''). filter(Boolean).join('')||'<p>No daily living entries recorded.</p>'}
+  ${ACTS.map(function(a){return D.daily[a.id] ? '<h3>'+a.label+'</h3><p>'+D.daily[a.id]+'</p>' : '';}).filter(Boolean).join('')||'<p>No daily living entries recorded.</p>'}
   <h2>Mobility log (${D.mobility.entries.length} entries)</h2>
   ${D.mobility.entries.length?`<table><tr><th>Date</th><th>Distance</th><th>Pain</th><th>Fatigue</th><th>Aids</th><th>Falls</th></tr>
   ${D.mobility.entries.map(e=>`<tr><td>${fmtDate(e.date)}${e.worst?' ★':''}</td><td>${e.dist||'—'}</td><td>${e.pain}/10</td><td>${e.fatigue}/10</td><td>${e.aids||'—'}</td><td>${e.falls}</td></tr>`).join('')}</table>`:'<p>No mobility entries recorded.</p>'}
@@ -2362,11 +2367,11 @@ function printPack(){
       + helpHtml + consHtml;
   }).join(''):'<p>No real-life examples recorded yet.</p>'}
   <h2>Assessment preparation notes</h2>
-  ${D.prep.worst_days?`<h3>Worst days</h3><p>${D.prep.worst_days}</p>`:''}
-  ${D.prep.without_help?`<h3>Without assistance</h3><p>${D.prep.without_help}</p>`:''}
-  ${D.prep.risks?`<h3>Risks</h3><p>${D.prep.risks}</p>`:''}
-  ${D.prep.frequency?`<h3>Frequency</h3><p>${D.prep.frequency}</p>`:''}
-  ${D.prep.additional?`<h3>Additional notes</h3><p>${D.prep.additional}</p>`:''}
+  ${D.prep.worst_days ? '<h3>Worst days</h3><p>'+D.prep.worst_days+'</p>' : ''}
+  ${D.prep.without_help ? '<h3>Without assistance</h3><p>'+D.prep.without_help+'</p>' : ''}
+  ${D.prep.risks ? '<h3>Risks</h3><p>'+D.prep.risks+'</p>' : ''}
+  ${D.prep.frequency ? '<h3>Frequency</h3><p>'+D.prep.frequency+'</p>' : ''}
+  ${D.prep.additional ? '<h3>Additional notes</h3><p>'+D.prep.additional+'</p>' : ''}
   <h2>Supporting evidence index (${D.vault.length} documents)</h2>
   ${D.vault.length?`<table><tr><th>Document</th><th>Category</th><th>Notes</th></tr>
   ${D.vault.map(v=>`<tr><td>${v.name}</td><td>${v.cat}</td><td>${v.notes||'—'}</td></tr>`).join('')}</table>`:'<p>No supporting documents logged.</p>'}
@@ -2766,7 +2771,7 @@ function timeline(){
   document.getElementById('content-area').innerHTML=`
   <p class="section-desc">A chronological view of everything you have recorded — symptoms, appointments, mobility entries, conditions, and real-life examples.</p>
   <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
-    ${['All','Symptoms','Appointments','Mobility','Examples'].map(f=>`<span class="badge ${f==='All'?'badge-navy':'badge-gray'}" style="cursor:pointer;padding:5px 12px">${f}</span>`).join('')}
+    ${['All','Symptoms','Appointments','Mobility','Examples'].map(function(f){return '<span class="badge ' + (f==='All'?'badge-navy':'badge-gray') + '" style="cursor:pointer;padding:5px 12px">' + f + '</span>';}).join('')}
   </div>
   <div class="timeline-wrap">${items}</div>`;
 }
@@ -2860,7 +2865,7 @@ function voicenotes(){
   </div>
   <div class="card">
     <div class="card-title">Saved voice notes (${D.voiceNotes.length})</div>
-    ${D.voiceNotes.length?notes:`<div class="empty"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/></svg><p>No voice notes yet — tap "Start recording" above</p></div>`}
+    ${D.voiceNotes.length ? notes : '<div class="empty"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/></svg><p>No voice notes yet — tap "Start recording" above</p></div>'}
   </div>`;
 }
 async function toggleVoiceRecording(){
@@ -3064,12 +3069,13 @@ function showLockScreen(){
   <div class="lock-title">PIP Evidence Builder™</div>
   <div class="lock-sub">Enter your PIN to continue</div>
   <div class="pin-dots">
-    ${[0,1,2,3,4,5].map(i=>`<div class="pin-dot" id="pd-${i}"></div>`).join('')}
+    ${[0,1,2,3,4,5].map(function(i){return '<div class="pin-dot" id="pd-'+i+'"></div>';}).join('')}
   </div>
   <div class="lock-error" id="lock-error"></div>
   <div class="pin-pad">
-    ${[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(n=>`
-      <button class="pin-btn ${n==='⌫'?'del':''}" onclick="pinPress('${n}')">${n}</button>`).join('')}
+    ${[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(function(n){
+      return '<button class="pin-btn ' + (n==='⌫'?'del':'') + '" onclick="pinPress(\'' + n + '\')">' + n + '</button>';
+    }).join('')}
   </div>
   ${hasBio ? '<button class="lock-bio-btn" onclick="biometricUnlock()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Use biometric unlock</button>' : ''}
   <p style="color:rgba(255,255,255,.3);font-size:11px;margin-top:16px">Your data is encrypted on this device</p>`;
