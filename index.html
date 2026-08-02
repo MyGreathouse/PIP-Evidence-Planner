@@ -1541,7 +1541,7 @@ function conditions(){
         </div>
         <div style="display:flex;gap:5px;flex-shrink:0">${badge(c.status,'badge-red')}${badge(c.cat,catBadge(c.cat))}</div>
       </div>
-      ${c.impact?`<div class="item-body">${c.impact}</div>`:''}
+      ${c.impact ? '<div class="item-body">' + c.impact + '</div>' : ''}
       <div class="item-actions">
         <button class="btn btn-sm btn-danger" onclick="deleteCondition(${i})">Remove</button>
       </div>
@@ -1615,7 +1615,7 @@ function medication(){
         <div><div class="item-title">${m.name}</div><div class="item-meta">${m.dose||'Dose not recorded'} &nbsp;·&nbsp; ${m.purp||''}</div></div>
         <span style="font-size:12px;color:var(--text3)">${m.by||''}</span>
       </div>
-      ${m.se?`<div class="item-body">Side effects: ${m.se}</div>`:''}
+      ${m.se ? '<div class="item-body">Side effects: ' + m.se + '</div>' : ''}
       <div class="item-actions"><button class="btn btn-sm btn-danger" onclick="deleteMed(${i})">Remove</button></div>
     </div>`).join('');
   ca.innerHTML=`
@@ -1709,16 +1709,19 @@ function saveDailyEntry(id){
 function mobility(){
   const ca=document.getElementById('content-area');
   const today=new Date().toISOString().split('T')[0];
-  const rows=D.mobility.entries.slice().reverse().map((e,i)=>`
-    <div class="item-row">
-      <div class="item-row-header">
-        <div><div class="item-title">${fmtDate(e.date)} ${e.worst?'<span class="badge badge-red" style="margin-left:6px">Worst day</span>':''}</div>
-          <div class="item-meta">Distance: ${e.dist||'Not recorded'} &nbsp;·&nbsp; Pain: ${e.pain}/10 &nbsp;·&nbsp; Fatigue: ${e.fatigue}/10</div></div>
-        <button class="btn btn-sm btn-danger" onclick="deleteMobility(${D.mobility.entries.length-1-i})">×</button>
-      </div>
-      ${e.aids?`<div class="item-body">Aids used: ${e.aids}</div>`:''}
-      ${e.notes?`<div class="item-body">${e.notes}</div>`:''}
-    </div>`).join('');
+  const rows=D.mobility.entries.slice().reverse().map((e,i)=>{
+    var worstBadge = e.worst ? '<span class="badge badge-red" style="margin-left:6px">Worst day</span>' : '';
+    var aidsHtml   = e.aids  ? '<div class="item-body">Aids used: ' + e.aids + '</div>' : '';
+    var notesHtml  = e.notes ? '<div class="item-body">' + e.notes + '</div>' : '';
+    return '<div class="item-row">'
+      + '<div class="item-row-header">'
+      + '<div><div class="item-title">' + fmtDate(e.date) + ' ' + worstBadge + '</div>'
+      + '<div class="item-meta">Distance: ' + (e.dist||'Not recorded') + ' &nbsp;&middot;&nbsp; Pain: ' + e.pain + '/10 &nbsp;&middot;&nbsp; Fatigue: ' + e.fatigue + '/10</div></div>'
+      + '<button class="btn btn-sm btn-danger" onclick="deleteMobility(' + (D.mobility.entries.length-1-i) + ')">×</button>'
+      + '</div>'
+      + aidsHtml + notesHtml
+      + '</div>';
+  }).join('');
   ca.innerHTML=`
   <p class="section-desc">Record your walking ability, pain levels, and mobility challenges every day. Include your worst days — these matter most.</p>
   <div class="card">
@@ -1835,11 +1838,11 @@ function vault(){
       <div class="doc-card-body">
         <div class="doc-card-name" title="${v.name}">${v.name}</div>
         <div class="doc-card-meta">${badge(v.cat,'badge-navy')} <span>${size}</span></div>
-        ${v.notes?`<div style="font-size:11px;color:var(--text2);margin-top:5px;line-height:1.4">${v.notes}</div>`:''}
+        ${v.notes ? '<div style="font-size:11px;color:var(--text2);margin-top:5px;line-height:1.4">' + v.notes + '</div>' : ''}
       </div>
       <div class="doc-card-actions">
-        ${isImg&&v.data?`<button class="btn btn-sm" onclick="openLightbox(${i})">View</button>`:''}
-        ${v.data?`<button class="btn btn-sm" onclick="downloadDoc(${i})">Save</button>`:''}
+        ${(isImg&&v.data) ? '<button class="btn btn-sm" onclick="openLightbox(' + i + ')">View</button>' : ''}
+        ${v.data ? '<button class="btn btn-sm" onclick="downloadDoc(' + i + ')">Save</button>' : ''}
         <button class="btn btn-sm btn-danger" onclick="deleteVault(${i})">Remove</button>
       </div>
     </div>`;
@@ -2085,8 +2088,8 @@ function examples(){
         <button class="btn btn-sm btn-danger" onclick="deleteExample(${D.examples.length-1-i})">×</button>
       </div>
       <div class="item-body">${e.what}</div>
-      ${e.help?`<div class="item-body"><strong>Assistance:</strong> ${e.help}</div>`:''}
-      ${e.cons?`<div class="item-body"><strong>Consequences:</strong> ${e.cons}</div>`:''}
+      ${e.help ? '<div class="item-body"><strong>Assistance:</strong> ' + e.help + '</div>' : ''}
+      ${e.cons ? '<div class="item-body"><strong>Consequences:</strong> ' + e.cons + '</div>' : ''}
     </div>`).join('');
   ca.innerHTML=`
   <p class="section-desc">Specific, dated real-life examples are among the most persuasive evidence you can provide. Record incidents as they happen.</p>
@@ -2329,9 +2332,13 @@ function printPack(){
     <div class="score-box"><div style="font-size:9pt;color:#555">Evidence strength</div><div class="score-val" style="color:#0D2B4E">${es}</div><div style="font-size:9pt;color:#555">${evidClass(es)}</div></div>
   </div>
   <h2>Health conditions (${D.conditions.length})</h2>
-  ${D.conditions.length?D.conditions.map(c=>`<h3>${c.name}</h3>
-  <div class="meta">Diagnosed: ${c.date||'—'} &nbsp;·&nbsp; ${c.by||''} &nbsp;·&nbsp; ${c.status}</div>
-  ${c.impact?`<p>${c.impact}</p>`:''}${c.mob?`<p><strong>Mobility impact:</strong> ${c.mob}</p>`:''}`).join(''):'<p>No conditions recorded.</p>'}
+  ${D.conditions.length?D.conditions.map(function(c){
+    var impactHtml = c.impact ? '<p>' + c.impact + '</p>' : '';
+    var mobHtml    = c.mob    ? '<p><strong>Mobility impact:</strong> ' + c.mob + '</p>' : '';
+    return '<h3>' + c.name + '</h3>'
+      + '<div class="meta">Diagnosed: ' + (c.date||'—') + ' &nbsp;&middot;&nbsp; ' + (c.by||'') + ' &nbsp;&middot;&nbsp; ' + c.status + '</div>'
+      + impactHtml + mobHtml;
+  }).join(''):'<p>No conditions recorded.</p>'}
   <h2>Symptom log (${D.symptoms.length} entries)</h2>
   ${D.symptoms.length?`<table><tr><th>Date</th><th>Symptom</th><th>Severity</th><th>Effect on activities</th></tr>
   ${D.symptoms.map(s=>`<tr><td>${fmtDate(s.date)}</td><td>${s.name}</td><td>${s.sev}/10</td><td>${s.effect||'—'}</td></tr>`).join('')}</table>`:'<p>No symptom entries recorded.</p>'}
@@ -2347,10 +2354,13 @@ function printPack(){
   ${D.appointments.length?`<table><tr><th>Date</th><th>Type</th><th>Provider</th><th>Outcome</th></tr>
   ${D.appointments.map(a=>`<tr><td>${fmtDate(a.date)}</td><td>${a.type}</td><td>${a.prov||'—'}</td><td>${a.outcome||'—'}</td></tr>`).join('')}</table>`:'<p>No appointments logged.</p>'}
   <h2>Real-life examples (${D.examples.length})</h2>
-  ${D.examples.length?D.examples.map(e=>`<h3>${e.act} — ${fmtDate(e.date)}</h3>
-  <p>${e.what}</p>
-  ${e.help?`<p><strong>Assistance needed:</strong> ${e.help}</p>`:''}
-  ${e.cons?`<p><strong>Consequences:</strong> ${e.cons}</p>`:''}`).join(''):'<p>No real-life examples recorded yet.</p>'}
+  ${D.examples.length?D.examples.map(function(e){
+    var helpHtml = e.help ? '<p><strong>Assistance needed:</strong> ' + e.help + '</p>' : '';
+    var consHtml = e.cons ? '<p><strong>Consequences:</strong> ' + e.cons + '</p>' : '';
+    return '<h3>' + e.act + ' — ' + fmtDate(e.date) + '</h3>'
+      + '<p>' + e.what + '</p>'
+      + helpHtml + consHtml;
+  }).join(''):'<p>No real-life examples recorded yet.</p>'}
   <h2>Assessment preparation notes</h2>
   ${D.prep.worst_days?`<h3>Worst days</h3><p>${D.prep.worst_days}</p>`:''}
   ${D.prep.without_help?`<h3>Without assistance</h3><p>${D.prep.without_help}</p>`:''}
@@ -2749,7 +2759,7 @@ function timeline(){
       <div class="tl-content">
         <div class="tl-date">${fmtDate(e.date)||'Date not recorded'}</div>
         <div class="tl-title">${e.title}</div>
-        ${e.desc?`<div class="tl-desc">${e.desc}</div>`:''}
+        ${e.desc ? '<div class="tl-desc">' + e.desc + '</div>' : ''}
       </div>
     </div>`).join('')
     :`<div class="empty"><p>No events yet — start adding symptoms, appointments, and mobility entries to see your timeline.</p></div>`;
@@ -2803,7 +2813,7 @@ function checklist(){
       <div class="check-label">
         <div class="check-title">${c.title}</div>
         <div class="check-desc">${c.desc}</div>
-        ${!c.done?`<span class="check-cta" onclick="showSection('${c.section}',document.querySelector('[data-section=${c.section}]'))">→ Go to ${c.section}</span>`:''}
+        ${!c.done ? '<span class="check-cta" onclick="showSection(\'' + c.section + '\',document.querySelector(\'[data-section=' + c.section + ']\'))">→ Go to ' + c.section + '</span>' : ''}
       </div>
     </div>`).join('');
   document.getElementById('content-area').innerHTML=`
@@ -2903,13 +2913,7 @@ function settings(){
       </div>
       <label class="toggle"><input type="checkbox" ${lockEnabled?'checked':''} onchange="togglePin(this.checked)"><span class="toggle-slider"></span></label>
     </div>
-    ${biometricAvail?`<div class="settings-row">
-      <div class="settings-label">
-        <div class="settings-title">Biometric unlock</div>
-        <div class="settings-desc">Use Face ID, fingerprint, or device PIN to unlock</div>
-      </div>
-      <label class="toggle"><input type="checkbox" ${localStorage.getItem('pip_cred_id')?'checked':''} onchange="toggleBiometric(this.checked)"><span class="toggle-slider"></span></label>
-    </div>`:''}
+    ${biometricAvail ? '<div class="settings-row"><div class="settings-label"><div class="settings-title">Biometric unlock</div><div class="settings-desc">Use Face ID, fingerprint, or device PIN to unlock</div></div><label class="toggle"><input type="checkbox" ' + (localStorage.getItem('pip_cred_id')?'checked':'') + ' onchange="toggleBiometric(this.checked)"><span class="toggle-slider"></span></label></div>' : ''}
 
     <div class="settings-section-title">Encryption</div>
     <div class="settings-row">
@@ -2938,7 +2942,7 @@ function settings(){
     <div class="settings-row">
       <div class="settings-label">
         <div class="settings-title">Daily symptom reminder</div>
-        <div class="settings-desc">${(reminder&&reminder.enabled)?`Set for ${reminder.hour}:00 daily`:'Remind me to log symptoms each day'}</div>
+        <div class="settings-desc">${(reminder&&reminder.enabled) ? 'Set for ' + reminder.hour + ':00 daily' : 'Remind me to log symptoms each day'}</div>
       </div>
       <label class="toggle"><input type="checkbox" ${(reminder&&reminder.enabled)?'checked':''} onchange="toggleReminder(this.checked)"><span class="toggle-slider"></span></label>
     </div>
@@ -2959,7 +2963,7 @@ function settings(){
     <div class="settings-row">
       <div class="settings-label">
         <div class="settings-title">Auto-backup</div>
-        <div class="settings-desc">${abCfg.enabled?`Downloads a backup ${abCfg.freq}. Last: ${abCfg.lastRun?fmtDate(abCfg.lastRun.split('T')[0]):'never'}`:'Automatically download a backup file on a schedule'}</div>
+        <div class="settings-desc">${abCfg.enabled ? 'Downloads a backup ' + abCfg.freq + '. Last: ' + (abCfg.lastRun ? fmtDate(abCfg.lastRun.split('T')[0]) : 'never') : 'Automatically download a backup file on a schedule'}</div>
       </div>
       <label class="toggle"><input type="checkbox" ${abCfg.enabled?'checked':''} onchange="toggleAutoBackup(this.checked)"><span class="toggle-slider"></span></label>
     </div>
@@ -3067,10 +3071,7 @@ function showLockScreen(){
     ${[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(n=>`
       <button class="pin-btn ${n==='⌫'?'del':''}" onclick="pinPress('${n}')">${n}</button>`).join('')}
   </div>
-  ${hasBio?`<button class="lock-bio-btn" onclick="biometricUnlock()">
-    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-    Use biometric unlock
-  </button>`:''}
+  ${hasBio ? '<button class="lock-bio-btn" onclick="biometricUnlock()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Use biometric unlock</button>' : ''}
   <p style="color:rgba(255,255,255,.3);font-size:11px;margin-top:16px">Your data is encrypted on this device</p>`;
   document.body.appendChild(div);
 }
